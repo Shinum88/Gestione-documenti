@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Login from './components/Login';
@@ -6,6 +6,7 @@ import OperatorDashboard from './components/OperatorDashboard';
 import CargoManagerDashboard from './components/CargoManagerDashboard';
 import CameraScanner from './components/CameraScanner';
 import { Toaster } from 'sonner';
+import { initializeMockData } from './utils/mockData';
 
 // Context per gestione stato globale
 const AppContext = createContext();
