@@ -220,10 +220,27 @@ const CargoManagerDashboard = () => {
       </button>
       
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Dashboard Carico Merci</h1>
-        <p className="dashboard-subtitle">
-          Benvenuto, {user?.username}. Gestisci i documenti e applica le firme.
-        </p>
+        <div>
+          <h1 className="dashboard-title">Dashboard Carico Merci</h1>
+          <p className="dashboard-subtitle">
+            Benvenuto, {user?.username}. Gestisci i documenti e applica le firme.
+          </p>
+        </div>
+        <button 
+          className="btn-action btn-secondary"
+          onClick={handleLoadMockData}
+          style={{ 
+            position: 'absolute',
+            top: '2rem',
+            left: '2rem',
+            background: '#6366f1', 
+            color: 'white',
+            padding: '0.5rem 1rem',
+            fontSize: '0.9rem'
+          }}
+        >
+          📋 Carica Dati Test
+        </button>
       </div>
 
       {/* Filtri */}
