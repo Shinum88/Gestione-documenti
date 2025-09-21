@@ -391,14 +391,23 @@ const CargoManagerDashboard = () => {
       {/* Barra azioni */}
       {selectedDocuments.size > 0 && (
         <div className="actions-bar">
-          <button 
-            className="btn-action btn-sign"
-            onClick={applySignatureToSelected}
-            disabled={loading}
-          >
-            {loading ? 'Applicando firma...' : `Applica Firma (${selectedDocuments.size})`}
-          </button>
+          {/* Solo per documenti non firmati */}
+          {(() => {
+            const selectedDocs = documents.filter(doc => selectedDocuments.has(doc._id));
+            const hasUnsignedDocs = selectedDocs.some(doc => !doc.signed);
+            
+            return hasUnsignedDocs && (
+              <button 
+                className="btn-action btn-sign"
+                onClick={handleApplySignature}
+                disabled={loading}
+              >
+                {loading ? 'Applicando...' : `Applica Firma/Sigillo (${selectedDocuments.size})`}
+              </button>
+            );
+          })()}
           
+          {/* Solo per documenti firmati */}
           {activeTab === 'signed' && (
             <button 
               className="btn-action btn-download"
