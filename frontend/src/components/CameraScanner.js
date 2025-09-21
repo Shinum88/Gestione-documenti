@@ -115,49 +115,18 @@ const CameraScanner = () => {
     saveDocumentToDB(finalDocument);
   };
 
-  const handleSignatureSave = (signatureData) => {
-    setSignature(signatureData);
-    setShowSignature(false);
-    saveDocumentToDB(signatureData);
-  };
-
-  const saveDocumentToDB = async (signatureData) => {
+  const saveDocumentToDB = async (documentData) => {
     try {
-      // Crea PDF con firma sulla prima pagina
-      const pdf = new jsPDF();
-      const pages = [...currentDocument.pages, preview].filter(Boolean);
-      
-      for (let i = 0; i < pages.length; i++) {
-        if (i > 0) pdf.addPage();
-        
-        // Aggiungi immagine della pagina
-        const imgWidth = 190;
-        const imgHeight = 270;
-        pdf.addImage(pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
-        
-        // Aggiungi firma solo sulla prima pagina
-        if (i === 0 && signatureData) {
-          const signatureWidth = 50;
-          const signatureHeight = 25;
-          const x = 190 - signatureWidth; // 90% width
-          const y = 270 - signatureHeight; // 95% height
-          
-          pdf.addImage(signatureData, 'PNG', x, y, signatureWidth, signatureHeight);
-        }
-      }
-      
-      const pdfBlob = pdf.output('blob');
-      const pdfBase64 = await blobToBase64(pdfBlob);
-      
-      // Simula salvataggio nel database
+      // Crea documento senza firma - la firma verrà applicata dal carico merci
       const newDocument = {
         _id: Date.now().toString(),
         folderId: currentFolder._id,
         name: `Documento_${Date.now()}`,
-        pages: [...currentDocument.pages, preview].filter(Boolean),
-        pdfData: pdfBase64,
-        signed: !!signatureData,
-        signature: signatureData ? { image: signatureData } : null,
+        pages: documentData.pages.filter(Boolean),
+        signed: false, // Sempre false - firma applicata dal carico merci
+        signature: null,
+        sealNumber: null, // Campo per numero sigillo
+        transporterName: null, // Campo per nome trasportatore
         createdAt: new Date().toISOString()
       };
       
@@ -169,7 +138,6 @@ const CameraScanner = () => {
       // Reset e torna alla selezione terzista
       setCurrentDocument({ pages: [] });
       setPreview(null);
-      setSignature(null);
       navigate('/operator');
       
     } catch (error) {
