@@ -34,7 +34,7 @@ const CameraScanner = () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { 
-          facingMode: 'environment', // Fotocamera posteriore per iOS
+          facingMode: 'environment', // Fotocamera posteriore per iOS e Android
           width: { ideal: 1920 },
           height: { ideal: 1080 }
         }
