@@ -311,21 +311,32 @@ const CargoManagerDashboard = () => {
             Benvenuto, {user?.username}. Gestisci i documenti e applica le firme.
           </p>
         </div>
-        <button 
-          className="btn-action btn-secondary"
-          onClick={handleLoadMockData}
-          style={{ 
-            position: 'absolute',
-            top: '2rem',
-            left: '2rem',
-            background: '#6366f1', 
-            color: 'white',
-            padding: '0.5rem 1rem',
-            fontSize: '0.9rem'
-          }}
-        >
-          📋 Carica Dati Test
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', position: 'absolute', top: '2rem', left: '2rem' }}>
+          <button 
+            className="btn-action btn-secondary"
+            onClick={handleLoadMockData}
+            style={{ 
+              background: '#6366f1', 
+              color: 'white',
+              padding: '0.5rem 1rem',
+              fontSize: '0.9rem'
+            }}
+          >
+            📋 Carica Dati Test
+          </button>
+          <button 
+            className="btn-action btn-secondary"
+            onClick={() => setShowTransporterManager(true)}
+            style={{ 
+              background: '#10b981', 
+              color: 'white',
+              padding: '0.5rem 1rem',
+              fontSize: '0.9rem'
+            }}
+          >
+            👥 Gestisci Trasportatori
+          </button>
+        </div>
       </div>
 
       {/* Filtri */}
