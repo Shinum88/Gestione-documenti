@@ -106,15 +106,13 @@ const CameraScanner = () => {
   const concludeScanning = () => {
     if (!preview) return;
     
-    // Aggiungi ultima pagina se presente
+    // Aggiungi ultima pagina se presente e salva documento senza firma
     const finalDocument = {
       ...currentDocument,
       pages: [...currentDocument.pages, preview]
     };
-    setCurrentDocument(finalDocument);
     
-    // Mostra canvas firma
-    setShowSignature(true);
+    saveDocumentToDB(finalDocument);
   };
 
   const handleSignatureSave = (signatureData) => {
