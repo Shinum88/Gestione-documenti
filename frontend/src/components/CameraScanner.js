@@ -19,8 +19,6 @@ const CameraScanner = () => {
 
   const [isScanning, setIsScanning] = useState(true);
   const [preview, setPreview] = useState(null);
-  const [showSignature, setShowSignature] = useState(false);
-  const [signature, setSignature] = useState(null);
   const [cameraError, setCameraError] = useState(false);
 
   useEffect(() => {
