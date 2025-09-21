@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../App';
-import SignatureCanvas from './SignatureCanvas';
 import { toast } from 'sonner';
-import jsPDF from 'jspdf';
 
 const CameraScanner = () => {
   const navigate = useNavigate();
