@@ -28,6 +28,11 @@ function App() {
   const [folders, setFolders] = useState([]);
   const [documents, setDocuments] = useState([]);
 
+  // Inizializza dati mock al caricamento dell'app
+  useEffect(() => {
+    initializeMockData(setFolders, setDocuments);
+  }, []);
+
   const contextValue = {
     user,
     setUser,
