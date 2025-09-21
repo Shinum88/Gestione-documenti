@@ -147,20 +147,18 @@ const CameraScanner = () => {
   };
 
   const startNewDocument = async () => {
-    // Salva documento corrente con firma se presente
+    // Salva documento corrente se ci sono pagine
     if (currentDocument.pages.length > 0 || preview) {
-      if (signature) {
-        await saveDocumentToDB(signature);
-      } else {
-        setShowSignature(true);
-        return;
-      }
+      const documentToSave = {
+        ...currentDocument,
+        pages: [...currentDocument.pages, preview].filter(Boolean)
+      };
+      await saveDocumentToDB(documentToSave);
     }
     
     // Reset per nuovo documento
     setCurrentDocument({ pages: [] });
     setPreview(null);
-    setSignature(null);
     setIsScanning(true);
     
     toast.success('Nuovo documento iniziato');
