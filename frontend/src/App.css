@@ -134,7 +134,7 @@ body {
 }
 
 .logout-btn {
-  position: absolute;
+  position: fixed;
   top: 2rem;
   right: 2rem;
   padding: 0.75rem 1.5rem;
@@ -145,11 +145,14 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .logout-btn:hover {
   background: #dc2626;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 /* Terzista Selection */
