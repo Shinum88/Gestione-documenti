@@ -33,6 +33,12 @@ const CargoManagerDashboard = () => {
 
   const terzisti = ['Danesi', 'Happening', 'Almax', 'Veliero', 'Gab', 'Kuoyo'];
 
+  // Inizializza trasportatori dal localStorage
+  React.useEffect(() => {
+    const savedTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
+    setTransporters(savedTransporters);
+  }, []);
+
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('user');
