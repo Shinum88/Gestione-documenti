@@ -204,6 +204,15 @@ const CargoManagerDashboard = () => {
     setLoading(false);
   };
 
+  const handleLoadMockData = () => {
+    const initialized = resetMockData(setFolders, setDocuments);
+    if (initialized) {
+      toast.success('Dati mock caricati per testing');
+    } else {
+      toast.info('Dati mock già presenti');
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <button className="logout-btn" onClick={handleLogout}>
