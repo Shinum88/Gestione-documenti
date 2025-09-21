@@ -92,21 +92,83 @@ const CargoManagerDashboard = () => {
     setSelectedDocuments(newSelected);
   };
 
-  const applySignatureToSelected = async () => {
+  const handleApplySignature = () => {
     if (selectedDocuments.size === 0) {
       toast.error('Seleziona almeno un documento');
       return;
     }
 
+    // Controlla se ci sono documenti già firmati
+    const selectedDocs = documents.filter(doc => selectedDocuments.has(doc._id));
+    const alreadySigned = selectedDocs.filter(doc => doc.signed);
+    
+    if (alreadySigned.length > 0) {
+      toast.error('Alcuni documenti sono già firmati');
+      return;
+    }
+
+    setShowSignatureOptions(true);
+  };
+
+  const handleSignatureOptionSelect = (option) => {
+    setShowSignatureOptions(false);
+    
+    if (option === 'seal') {
+      setShowSealNumberDialog(true);
+    } else if (option === 'signature') {
+      if (transporters.length === 0) {
+        toast.error('Nessun trasportatore registrato. Registra prima un trasportatore.');
+        setShowTransporterManager(true);
+        return;
+      }
+      applyTransporterSignature();
+    }
+  };
+
+  const handleSealNumberSubmit = () => {
+    if (!sealNumberData.transporter || !sealNumberData.number.trim()) {
+      toast.error('Seleziona trasportatore e inserisci numero sigillo');
+      return;
+    }
+
+    const selectedTransporter = transporters.find(t => t.id === sealNumberData.transporter);
+    if (!selectedTransporter) {
+      toast.error('Trasportatore non trovato');
+      return;
+    }
+
+    applySignatureAndSeal(selectedTransporter, sealNumberData.number.trim());
+    setShowSealNumberDialog(false);
+    setSealNumberData({ transporter: '', number: '' });
+  };
+
+  const applyTransporterSignature = async () => {
+    // Mostra il manager trasportatori per selezione
+    setShowTransporterManager(true);
+  };
+
+  const handleTransporterSelect = (transporter) => {
+    setShowTransporterManager(false);
+    applySignatureAndSeal(transporter, null);
+  };
+
+  const applySignatureAndSeal = async (transporter, sealNumber) => {
     setLoading(true);
     
     try {
-      // Simula applicazione firma
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const updatedDocuments = documents.map(doc => {
         if (selectedDocuments.has(doc._id)) {
-          return { ...doc, signed: true };
+          return { 
+            ...doc, 
+            signed: true,
+            signature: { image: transporter.signature },
+            transporterName: transporter.name,
+            transporterCompany: transporter.company,
+            sealNumber: sealNumber,
+            signedAt: new Date().toISOString()
+          };
         }
         return doc;
       });
@@ -138,7 +200,8 @@ const CargoManagerDashboard = () => {
       setFolders(updatedFolders);
       setSelectedDocuments(new Set());
       
-      toast.success(`Firma applicata a ${selectedDocuments.size} documenti`);
+      const action = sealNumber ? 'sigillo applicato' : 'firma applicata';
+      toast.success(`${action} a ${selectedDocuments.size} documenti`);
       
     } catch (error) {
       console.error('Errore applicazione firma:', error);
