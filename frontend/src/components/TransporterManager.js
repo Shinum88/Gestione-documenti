@@ -120,11 +120,9 @@ const TransporterManager = ({
       createdAt: new Date().toISOString()
     };
 
-    // Salva in localStorage
-    const existingTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
-    const updatedTransporters = [...existingTransporters, transporterData];
+    // Salva in localStorage e aggiorna stato
+    const updatedTransporters = [...transporters, transporterData];
     localStorage.setItem('transporters', JSON.stringify(updatedTransporters));
-    
     setTransporters(updatedTransporters);
     
     // Reset form
