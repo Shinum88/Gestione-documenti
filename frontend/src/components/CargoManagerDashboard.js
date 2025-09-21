@@ -290,7 +290,7 @@ const CargoManagerDashboard = () => {
   };
 
   const handleLoadMockData = () => {
-    const initialized = resetMockData(setFolders, setDocuments);
+    const initialized = resetMockData(setFolders, setDocuments, setTransporters);
     if (initialized) {
       toast.success('Dati mock caricati per testing');
     } else {
