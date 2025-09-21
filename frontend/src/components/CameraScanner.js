@@ -279,13 +279,6 @@ const CameraScanner = () => {
           Pagine documento corrente: {currentDocument.pages.length + (preview ? 1 : 0)}
         </div>
       </div>
-
-      {showSignature && (
-        <SignatureCanvas
-          onSave={handleSignatureSave}
-          onCancel={() => setShowSignature(false)}
-        />
-      )}
     </div>
   );
 };
