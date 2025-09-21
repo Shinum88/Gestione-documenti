@@ -164,15 +164,6 @@ const CameraScanner = () => {
     toast.success('Nuovo documento iniziato');
   };
 
-  const blobToBase64 = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
   const goBack = () => {
     navigate('/operator');
   };
