@@ -476,9 +476,21 @@ const CargoManagerDashboard = () => {
                           checked={selectedDocuments.has(doc._id)}
                           onChange={(e) => handleDocumentSelect(doc._id, e.target.checked)}
                         />
-                        <span className="document-name">
-                          {doc.name} ({doc.pages.length} pag.)
-                        </span>
+                        <div className="document-name" style={{ flex: 1 }}>
+                          <div>
+                            {doc.name} ({doc.pages.length} pag.)
+                          </div>
+                          {doc.signed && (
+                            <div style={{ fontSize: '0.8rem', color: '#059669', marginTop: '0.25rem' }}>
+                              ✓ Firmato da: {doc.transporterName} ({doc.transporterCompany})
+                              {doc.sealNumber && (
+                                <span style={{ marginLeft: '0.5rem', color: '#f59e0b' }}>
+                                  🏷️ Sigillo: {doc.sealNumber}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         {doc.signed && (
                           <span style={{ 
                             color: '#059669', 
