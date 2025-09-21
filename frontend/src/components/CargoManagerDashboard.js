@@ -4,6 +4,7 @@ import { useAppContext } from '../App';
 import { toast } from 'sonner';
 import JSZip from 'jszip';
 import jsPDF from 'jspdf';
+import { resetMockData } from '../utils/mockData';
 
 const CargoManagerDashboard = () => {
   const navigate = useNavigate();
