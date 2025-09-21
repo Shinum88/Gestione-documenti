@@ -227,35 +227,43 @@ const CargoManagerDashboard = () => {
       const zip = new JSZip();
       
       for (const doc of selectedDocs) {
-        if (doc.pdfData) {
-          // Usa PDF esistente
-          const pdfData = doc.pdfData.split(',')[1]; // Rimuovi data:application/pdf;base64,
-          zip.file(`${doc.name}.pdf`, pdfData, { base64: true });
-        } else {
-          // Crea PDF dalle pagine
-          const pdf = new jsPDF();
+        // Crea PDF dalle pagine con firma e/o sigillo
+        const pdf = new jsPDF();
+        
+        for (let i = 0; i < doc.pages.length; i++) {
+          if (i > 0) pdf.addPage();
           
-          for (let i = 0; i < doc.pages.length; i++) {
-            if (i > 0) pdf.addPage();
+          const imgWidth = 190;
+          const imgHeight = 270;
+          pdf.addImage(doc.pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
+          
+          // Aggiungi firma sulla prima pagina (in basso a destra)
+          if (i === 0 && doc.signature?.image) {
+            const signatureWidth = 50;
+            const signatureHeight = 25;
+            const x = 190 - signatureWidth; // 90% width
+            const y = 270 - signatureHeight; // 95% height
             
-            const imgWidth = 190;
-            const imgHeight = 270;
-            pdf.addImage(doc.pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
-            
-            // Aggiungi firma sulla prima pagina
-            if (i === 0 && doc.signature?.image) {
-              const signatureWidth = 50;
-              const signatureHeight = 25;
-              const x = 190 - signatureWidth;
-              const y = 270 - signatureHeight;
-              
-              pdf.addImage(doc.signature.image, 'PNG', x, y, signatureWidth, signatureHeight);
-            }
+            pdf.addImage(doc.signature.image, 'PNG', x, y, signatureWidth, signatureHeight);
           }
           
-          const pdfBlob = pdf.output('blob');
-          zip.file(`${doc.name}.pdf`, pdfBlob);
+          // Aggiungi numero sigillo sulla prima pagina (in basso a sinistra)
+          if (i === 0 && doc.sealNumber) {
+            pdf.setFontSize(10);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(`Sigillo: ${doc.sealNumber}`, 10, 270);
+            
+            if (doc.transporterName) {
+              pdf.text(`Trasportatore: ${doc.transporterName}`, 10, 275);
+            }
+          }
         }
+        
+        const pdfBlob = pdf.output('blob');
+        const filename = doc.sealNumber 
+          ? `${doc.name}_sigillo_${doc.sealNumber}.pdf`
+          : `${doc.name}_firmato.pdf`;
+        zip.file(filename, pdfBlob);
       }
       
       const zipBlob = await zip.generateAsync({ type: 'blob' });
