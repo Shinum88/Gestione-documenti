@@ -230,32 +230,37 @@ export const mockData = {
 };
 
 // Funzione per inizializzare i dati mock nell'app
-export const initializeMockData = (setFolders, setDocuments) => {
+export const initializeMockData = (setFolders, setDocuments, setTransporters = null) => {
   // Controlla se già ci sono dati
   const existingFolders = JSON.parse(localStorage.getItem('mockFolders') || '[]');
   const existingDocuments = JSON.parse(localStorage.getItem('mockDocuments') || '[]');
+  const existingTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
   
   if (existingFolders.length === 0) {
     localStorage.setItem('mockFolders', JSON.stringify(mockData.folders));
     localStorage.setItem('mockDocuments', JSON.stringify(mockData.documents));
+    localStorage.setItem('transporters', JSON.stringify(mockData.transporters));
     
     setFolders(mockData.folders);
     setDocuments(mockData.documents);
+    if (setTransporters) setTransporters(mockData.transporters);
     
     return true; // Dati inizializzati
   } else {
     setFolders(existingFolders);
     setDocuments(existingDocuments);
+    if (setTransporters) setTransporters(existingTransporters);
     
     return false; // Dati già esistenti
   }
 };
 
 // Funzione per resettare i dati mock
-export const resetMockData = (setFolders, setDocuments) => {
+export const resetMockData = (setFolders, setDocuments, setTransporters = null) => {
   localStorage.removeItem('mockFolders');
   localStorage.removeItem('mockDocuments');
+  localStorage.removeItem('transporters');
   
-  const initialized = initializeMockData(setFolders, setDocuments);
+  const initialized = initializeMockData(setFolders, setDocuments, setTransporters);
   return initialized;
 };
