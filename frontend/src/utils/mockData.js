@@ -136,6 +136,9 @@ export const mockData = {
       pages: [generateMockImage(400, 600, 'DOC DANESI 1')],
       signed: false,
       signature: null,
+      sealNumber: null,
+      transporterName: null,
+      transporterCompany: null,
       createdAt: '2025-01-20T10:30:00.000Z'
     },
     {
@@ -145,6 +148,9 @@ export const mockData = {
       pages: [generateMockImage(400, 600, 'DOC DANESI 2'), generateMockImage(400, 600, 'PAGINA 2')],
       signed: false,
       signature: null,
+      sealNumber: null,
+      transporterName: null,
+      transporterCompany: null,
       createdAt: '2025-01-20T10:45:00.000Z'
     },
     {
@@ -154,6 +160,9 @@ export const mockData = {
       pages: [generateMockImage(400, 600, 'DOC HAPPENING')],
       signed: false,
       signature: null,
+      sealNumber: null,
+      transporterName: null,
+      transporterCompany: null,
       createdAt: '2025-01-20T11:15:00.000Z'
     },
     {
@@ -163,6 +172,9 @@ export const mockData = {
       pages: [generateMockImage(400, 600, 'DOC ALMAX FIRMATO')],
       signed: true,
       signature: { image: generateMockSignature() },
+      sealNumber: 'AL2025001',
+      transporterName: 'Mario Rossi',
+      transporterCompany: 'Trasporti Rossi SRL',
       createdAt: '2025-01-19T14:30:00.000Z'
     },
     {
@@ -171,7 +183,10 @@ export const mockData = {
       name: 'Documento_001_Veliero',
       pages: [generateMockImage(400, 600, 'DOC VELIERO FIRMATO')],
       signed: true, 
-      signature: { image: generateMockSignature() },
+      signature: { image: generateVariantSignature(1) },
+      sealNumber: null,
+      transporterName: 'Giuseppe Bianchi',
+      transporterCompany: 'Express Delivery',
       createdAt: '2025-01-18T09:30:00.000Z'
     },
     {
@@ -180,8 +195,36 @@ export const mockData = {
       name: 'Documento_002_Veliero', 
       pages: [generateMockImage(400, 600, 'DOC VELIERO 2')],
       signed: true,
-      signature: { image: generateMockSignature() },
+      signature: { image: generateVariantSignature(2) },
+      sealNumber: 'VL2025007',
+      transporterName: 'Luigi Verdi',
+      transporterCompany: 'Corriere Espresso',
       createdAt: '2025-01-18T09:45:00.000Z'
+    }
+  ],
+  
+  // Trasportatori mock
+  transporters: [
+    {
+      id: 'trans_1',
+      name: 'Mario Rossi',
+      company: 'Trasporti Rossi SRL',
+      signature: generateMockSignature(),
+      createdAt: '2025-01-15T08:00:00.000Z'
+    },
+    {
+      id: 'trans_2',
+      name: 'Giuseppe Bianchi',
+      company: 'Express Delivery',
+      signature: generateVariantSignature(1),
+      createdAt: '2025-01-16T09:00:00.000Z'
+    },
+    {
+      id: 'trans_3',
+      name: 'Luigi Verdi',
+      company: 'Corriere Espresso',
+      signature: generateVariantSignature(2),
+      createdAt: '2025-01-17T10:00:00.000Z'
     }
   ]
 };
