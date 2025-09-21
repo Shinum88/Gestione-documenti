@@ -54,6 +54,47 @@ const generateMockSignature = () => {
   return canvas.toDataURL('image/png');
 };
 
+// Genera firma variante per diversi trasportatori
+const generateVariantSignature = (variant = 1) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 200;
+  canvas.height = 100;
+  const ctx = canvas.getContext('2d');
+  
+  // Background trasparente
+  ctx.clearRect(0, 0, 200, 100);
+  
+  // Firme simulate diverse
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  
+  ctx.beginPath();
+  if (variant === 1) {
+    // Firma ondulata
+    ctx.moveTo(15, 60);
+    ctx.quadraticCurveTo(40, 30, 70, 60);
+    ctx.quadraticCurveTo(100, 90, 130, 50);
+    ctx.quadraticCurveTo(160, 20, 185, 60);
+  } else if (variant === 2) {
+    // Firma con picchi
+    ctx.moveTo(20, 80);
+    ctx.lineTo(50, 30);
+    ctx.lineTo(80, 70);
+    ctx.lineTo(110, 25);
+    ctx.lineTo(140, 75);
+    ctx.lineTo(170, 35);
+  } else {
+    // Firma circolare
+    ctx.arc(100, 50, 30, 0, 2 * Math.PI);
+    ctx.moveTo(70, 50);
+    ctx.lineTo(130, 50);
+  }
+  ctx.stroke();
+  
+  return canvas.toDataURL('image/png');
+};
+
 // Dati mock per l'applicazione
 export const mockData = {
   folders: [
