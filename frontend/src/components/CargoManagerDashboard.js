@@ -292,16 +292,7 @@ const CargoManagerDashboard = () => {
             );
           })()}
           
-          {/* Solo per documenti firmati */}
-          {activeTab === 'signed' && (
-            <button 
-              className="btn-action btn-download"
-              onClick={downloadSelectedAsZip}
-              disabled={loading}
-            >
-              {loading ? 'Preparando ZIP...' : 'Scarica ZIP'}
-            </button>
-          )}
+
           
           <button 
             className="btn-action"
