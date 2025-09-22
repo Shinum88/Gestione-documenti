@@ -65,7 +65,7 @@ const DocumentSignatureManager = ({
 
     const selectedTransporterData = transporters.find(t => t.id === selectedTransporter);
     const transporterName = selectedTransporterData ? 
-      `${selectedTransporterData.name} (${selectedTransporterData.company})` : 
+      `${selectedTransporterData.name}` : 
       'Firma Personalizzata';
 
     setCurrentStep('processing');
@@ -98,6 +98,10 @@ const DocumentSignatureManager = ({
       if (currentDocIndex < documents.length - 1) {
         setCurrentDocIndex(currentDocIndex + 1);
         setCurrentStep('preview');
+        // Reset per nuovo documento
+        setSelectedTransporter('');
+        setSealNumber('');
+        setSignature(null);
         toast.success(`Documento ${currentDocIndex + 1} processato. Prossimo documento...`);
       } else {
         // Tutti i documenti processati
