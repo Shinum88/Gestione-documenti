@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DocumentPreview, { useDocumentProcessor } from './DocumentPreview';
 import SignatureCanvas from './SignatureCanvas';
+import { useDDTProcessor } from './DDTProcessor';
 import { toast } from 'sonner';
 
 const DocumentSignatureManager = ({ 
