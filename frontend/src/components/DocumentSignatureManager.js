@@ -220,7 +220,7 @@ const DocumentSignatureManager = ({
               <select
                 value={selectedTransporter}
                 onChange={(e) => handleTransporterSelect(e.target.value)}
-                className="filter-select"
+                className="form-input"
                 style={{ width: '100%', marginBottom: '1rem' }}
               >
                 <option value="">Scegli trasportatore...</option>
