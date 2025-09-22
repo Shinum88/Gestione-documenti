@@ -153,12 +153,34 @@ const DocumentSignatureManager = ({
   if (currentStep === 'processing') {
     return (
       <div className="signature-modal">
-        <div className="signature-container" style={{ textAlign: 'center' }}>
-          <h2 className="signature-title">Processamento Documento</h2>
+        <div className="signature-container" style={{ textAlign: 'center', maxWidth: '500px' }}>
+          <h2 className="signature-title">🔄 Elaborazione DDT Avanzata</h2>
           <div className="loading-spinner" style={{ margin: '2rem auto' }}></div>
-          <p>Applicazione firma e strutturazione A4 in corso...</p>
+          
+          <div style={{ 
+            background: '#f0f9ff', 
+            padding: '1.5rem', 
+            borderRadius: '12px',
+            marginBottom: '1rem',
+            border: '1px solid #bae6fd'
+          }}>
+            <h3 style={{ color: '#1e40af', marginBottom: '1rem' }}>Operazioni in corso:</h3>
+            <div style={{ color: '#1e40af', fontSize: '0.9rem', textAlign: 'left' }}>
+              <div>📐 Correzione geometrica automatica</div>
+              <div>🔍 Rilevamento bordi A4</div>
+              <div>📏 Rettificazione prospettiva</div>
+              <div>✂️ Ritaglio e ridimensionamento</div>
+              <div>✍️ Applicazione firma millimetrica</div>
+              <div>🏷️ Posizionamento metadata</div>
+              <div>📄 Generazione PDF multipagina</div>
+            </div>
+          </div>
+          
           <p style={{ color: '#64748b' }}>
             Documento {currentDocIndex + 1} di {documents.length}
+          </p>
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+            {currentDocument?.name || 'Documento sconosciuto'}
           </p>
         </div>
       </div>
