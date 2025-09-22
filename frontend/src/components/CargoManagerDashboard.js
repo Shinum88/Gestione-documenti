@@ -402,7 +402,6 @@ const CargoManagerDashboard = () => {
           transporters={transporters}
           setTransporters={setTransporters}
           onClose={() => setShowTransporterManager(false)}
-          onSelectTransporter={handleTransporterSelect}
         />
       )}
       
