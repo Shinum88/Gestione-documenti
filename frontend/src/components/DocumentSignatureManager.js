@@ -18,6 +18,7 @@ const DocumentSignatureManager = ({
   const [currentDocIndex, setCurrentDocIndex] = useState(0);
 
   const { generateProcessedPDF } = useDocumentProcessor();
+  const { processDocument: processDDTDocument } = useDDTProcessor();
   const currentDocument = documents[currentDocIndex];
 
   // Error handling - if no documents or current document is undefined
