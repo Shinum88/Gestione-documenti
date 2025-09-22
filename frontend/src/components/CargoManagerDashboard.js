@@ -162,6 +162,99 @@ const CargoManagerDashboard = () => {
       toast.info('Dati mock già presenti');
     }
   };
+  const downloadSelectedAsZip = async () => {
+    const selectedDocs = documents.filter(doc => 
+      selectedDocuments.has(doc._id) && doc.signed
+    );
+    
+    if (selectedDocs.length === 0) {
+      toast.error('Seleziona almeno un documento firmato');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const zip = new JSZip();
+      
+      for (const doc of selectedDocs) {
+        // Gestisci documenti elaborati con DDT Processor
+        if (doc.processedWithDDT && doc.pdfData) {
+          // Usa PDF elaborato direttamente
+          const pdfData = doc.pdfData.split(',')[1]; // Rimuovi data:application/pdf;base64,
+          const filename = doc.sealNumber 
+            ? `${doc.name}_DDT_Sigillo_${doc.sealNumber}.pdf`
+            : `${doc.name}_DDT_Firmato.pdf`;
+          zip.file(filename, pdfData, { base64: true });
+          
+        } else {
+          // Fallback: crea PDF dalle pagine (metodo classico)
+          const pdf = new jsPDF();
+          
+          for (let i = 0; i < doc.pages.length; i++) {
+            if (i > 0) pdf.addPage();
+            
+            const imgWidth = 190;
+            const imgHeight = 270;
+            pdf.addImage(doc.pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
+            
+            // Aggiungi firma sulla prima pagina (metodo classico)
+            if (i === 0 && doc.signature?.image) {
+              const signatureWidth = 50;
+              const signatureHeight = 25;
+              const x = 190 - signatureWidth; // 90% width
+              const y = 270 - signatureHeight; // 95% height
+              
+              pdf.addImage(doc.signature.image, 'PNG', x, y, signatureWidth, signatureHeight);
+            }
+            
+            // Aggiungi numero sigillo sulla prima pagina (metodo classico)
+            if (i === 0 && doc.sealNumber) {
+              pdf.setFontSize(10);
+              pdf.setTextColor(0, 0, 0);
+              pdf.text(`Sigillo: ${doc.sealNumber}`, 10, 270);
+              
+              if (doc.transporterName) {
+                pdf.text(`Trasportatore: ${doc.transporterName}`, 10, 275);
+              }
+            }
+          }
+          
+          const pdfBlob = pdf.output('blob');
+          const filename = doc.sealNumber 
+            ? `${doc.name}_sigillo_${doc.sealNumber}.pdf`
+            : `${doc.name}_firmato.pdf`;
+          zip.file(filename, pdfBlob);
+        }
+      }
+      
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      
+      // Download del file ZIP
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `documenti_DDT_elaborati_${new Date().toISOString().split('T')[0]}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      const ddtProcessedCount = selectedDocs.filter(doc => doc.processedWithDDT).length;
+      const message = ddtProcessedCount > 0 
+        ? `Scaricati ${selectedDocs.length} documenti (${ddtProcessedCount} con elaborazione DDT avanzata)`
+        : `Scaricati ${selectedDocs.length} documenti`;
+        
+      toast.success(message);
+      setSelectedDocuments(new Set());
+      
+    } catch (error) {
+      console.error('Errore generazione ZIP:', error);
+      toast.error('Errore durante la generazione del file ZIP');
+    }
+    
+    setLoading(false);
+  };
 
   return (
     <div className="dashboard-container">
