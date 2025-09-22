@@ -109,7 +109,8 @@ const CargoManagerDashboard = () => {
       return;
     }
 
-    setShowSignatureOptions(true);
+    // Apri il nuovo processore documenti A4
+    setShowDocumentProcessor(true);
   };
 
   const handleSignatureOptionSelect = (option) => {
