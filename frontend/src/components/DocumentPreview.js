@@ -364,22 +364,22 @@ export const useDocumentProcessor = () => {
         canvas.width = img.width;
         canvas.height = img.height;
         
-        // Calcola posizioni
-        const A4_RATIO = 1.414;
+        // Calcola posizioni usando le stesse proporzioni dell'anteprima
         const assumedDPI = img.width / (210 / 25.4);
         const mmToPx = (mm) => (mm * assumedDPI) / 25.4;
         
+        // Posizioni basate sull'analisi dell'immagine di riferimento
         const signatureArea = {
-          width: mmToPx(60),
-          height: mmToPx(30),
-          x: img.width - mmToPx(10) - mmToPx(60),
-          y: img.height - mmToPx(10) - mmToPx(30)
+          width: mmToPx(65),
+          height: mmToPx(28),
+          x: img.width - mmToPx(12) - mmToPx(65),
+          y: img.height - mmToPx(15) - mmToPx(28)
         };
 
         const textArea = {
-          x: mmToPx(12),
-          y: img.height - mmToPx(12),
-          fontSize: Math.max(12, mmToPx(3.5))
+          x: mmToPx(15),
+          y: img.height - mmToPx(15),
+          fontSize: Math.max(10, mmToPx(3.2))
         };
         
         // Disegna immagine originale
@@ -390,11 +390,11 @@ export const useDocumentProcessor = () => {
           const signImg = new Image();
           signImg.onload = () => {
             const aspectRatio = signImg.width / signImg.height;
-            let drawWidth = signatureArea.width * 0.8;
+            let drawWidth = signatureArea.width * 0.85; // Leggermente più grande
             let drawHeight = drawWidth / aspectRatio;
             
-            if (drawHeight > signatureArea.height * 0.8) {
-              drawHeight = signatureArea.height * 0.8;
+            if (drawHeight > signatureArea.height * 0.85) {
+              drawHeight = signatureArea.height * 0.85;
               drawWidth = drawHeight * aspectRatio;
             }
             
