@@ -109,7 +109,14 @@ const CargoManagerDashboard = () => {
       return;
     }
 
-    // Apri il nuovo processore documenti A4
+    // Verifica che ci siano trasportatori registrati
+    if (transporters.length === 0) {
+      toast.error('Registra prima almeno un trasportatore per poter applicare la firma');
+      setShowTransporterManager(true);
+      return;
+    }
+
+    // Apri il processore documenti A4 automatico
     setShowDocumentProcessor(true);
   };
 
