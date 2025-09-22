@@ -16,6 +16,7 @@ const DocumentSignatureManager = ({
   const [processedDocuments, setProcessedDocuments] = useState([]);
   const [currentDocIndex, setCurrentDocIndex] = useState(0);
 
+  const { generateProcessedPDF } = useDocumentProcessor();
   const currentDocument = documents[currentDocIndex];
 
   const handleTransporterSelect = (transporterId) => {
