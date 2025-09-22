@@ -365,7 +365,22 @@ const CargoManagerDashboard = () => {
             );
           })()}
           
-
+          {/* Bottone per scaricare documenti firmati come ZIP */}
+          {(() => {
+            const selectedDocs = documents.filter(doc => selectedDocuments.has(doc._id));
+            const hasSignedDocs = selectedDocs.some(doc => doc.signed);
+            
+            return hasSignedDocs && (
+              <button 
+                className="btn-action"
+                onClick={downloadSelectedAsZip}
+                disabled={loading}
+                style={{ background: '#059669', color: 'white' }}
+              >
+                {loading ? 'Generando ZIP...' : `📦 Scarica ZIP Documenti Firmati (${selectedDocs.filter(doc => doc.signed).length})`}
+              </button>
+            );
+          })()}
           
           <button 
             className="btn-action"
