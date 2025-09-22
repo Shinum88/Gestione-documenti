@@ -532,109 +532,14 @@ const CargoManagerDashboard = () => {
         )}
       </div>
       
-      {/* Dialog selezione tipo firma */}
-      {showSignatureOptions && (
-        <div className="signature-modal">
-          <div className="signature-container" style={{ maxWidth: '400px' }}>
-            <h2 className="signature-title">Seleziona Tipo di Operazione</h2>
-            <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '2rem' }}>
-              Scegli se applicare solo la firma o anche il numero sigillo
-            </p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <button
-                className="btn-action btn-sign"
-                onClick={() => handleSignatureOptionSelect('signature')}
-                style={{ width: '100%', padding: '1rem' }}
-              >
-                ✍️ Solo Firma Trasportatore
-              </button>
-              
-              <button
-                className="btn-action btn-secondary"
-                onClick={() => handleSignatureOptionSelect('seal')}
-                style={{ width: '100%', padding: '1rem', background: '#f59e0b', color: 'white' }}
-              >
-                🏷️ Firma + Numero Sigillo
-              </button>
-              
-              <button
-                className="btn-action"
-                onClick={() => setShowSignatureOptions(false)}
-                style={{ width: '100%', padding: '1rem', background: '#6b7280', color: 'white' }}
-              >
-                ✕ Annulla
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Dialog numero sigillo */}
-      {showSealNumberDialog && (
-        <div className="signature-modal">
-          <div className="signature-container" style={{ maxWidth: '500px' }}>
-            <h2 className="signature-title">Inserisci Numero Sigillo</h2>
-            <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '2rem' }}>
-              Il sigillo verrà applicato in basso a sinistra del documento
-            </p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#374151' }}>
-                  Seleziona Trasportatore
-                </label>
-                <select
-                  value={sealNumberData.transporter}
-                  onChange={(e) => setSealNumberData(prev => ({ ...prev, transporter: e.target.value }))}
-                  className="filter-select"
-                  style={{ width: '100%' }}
-                >
-                  <option value="">Seleziona trasportatore...</option>
-                  {transporters.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.name} - {t.company}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: '#374151' }}>
-                  Numero Sigillo
-                </label>
-                <input
-                  type="text"
-                  value={sealNumberData.number}
-                  onChange={(e) => setSealNumberData(prev => ({ ...prev, number: e.target.value }))}
-                  className="form-input"
-                  placeholder="Inserisci numero sigillo..."
-                  style={{ width: '100%' }}
-                />
-              </div>
-              
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <button
-                  className="btn-save"
-                  onClick={handleSealNumberSubmit}
-                  style={{ flex: 1, padding: '1rem' }}
-                >
-                  ✓ Applica Sigillo
-                </button>
-                <button
-                  className="btn-clear"
-                  onClick={() => {
-                    setShowSealNumberDialog(false);
-                    setSealNumberData({ transporter: '', number: '' });
-                  }}
-                  style={{ flex: 1, padding: '1rem' }}
-                >
-                  ✕ Annulla
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Processore documenti A4 */}
+      {showDocumentProcessor && (
+        <DocumentSignatureManager
+          documents={documents.filter(doc => selectedDocuments.has(doc._id))}
+          transporters={transporters}
+          onDocumentsProcessed={handleDocumentsProcessed}
+          onClose={() => setShowDocumentProcessor(false)}
+        />
       )}
       
       {/* Gestione trasportatori */}
