@@ -66,31 +66,40 @@ const DocumentSignatureManager = ({
     }
 
     const selectedTransporterData = transporters.find(t => t.id === selectedTransporter);
-    const transporterName = selectedTransporterData ? 
-      `${selectedTransporterData.name}` : 
-      'Firma Personalizzata';
+    const transporterName = selectedTransporterData?.name || 'Firma Personalizzata';
 
     setCurrentStep('processing');
 
     try {
-      // Processo la prima pagina del documento  
-      const processedFirstPage = await generateProcessedPDF(
-        currentDocument.pages[0],
-        signature,
-        sealNumber || null,
-        transporterName
+      console.log(`🔄 Iniziando elaborazione DDT avanzata...`);
+      console.log(`📄 Documento: ${currentDocument.name}`);
+      console.log(`📑 Pagine: ${currentDocument.pages.length}`);
+      console.log(`👤 Trasportatore: ${transporterName}`);
+      console.log(`🏷️ Sigillo: ${sealNumber || 'Nessuno'}`);
+
+      // Utilizza DDT Processor avanzato per elaborazione completa
+      const processedPdfBase64 = await processDDTDocument(
+        currentDocument.pages,        // Array immagini grezze
+        signature,                    // Firma PNG Base64  
+        sealNumber || 'N/A',         // Numero sigillo
+        transporterName               // Nome trasportatore
       );
+
+      // Converti PDF Base64 in processedPages per compatibilità
+      const processedPages = [processedPdfBase64]; // PDF come singolo elemento
 
       // Crea il documento processato
       const processedDoc = {
         ...currentDocument,
-        pages: [processedFirstPage, ...currentDocument.pages.slice(1)], // Prima pagina processata + resto
+        pages: currentDocument.pages, // Mantieni pagine originali per riferimento
+        pdfData: processedPdfBase64,  // PDF elaborato finale
         signed: true,
         signature: { image: signature },
         sealNumber: sealNumber || null,
         transporterName: selectedTransporterData?.name || 'Personalizzata',
         transporterCompany: selectedTransporterData?.company || '',
-        signedAt: new Date().toISOString()
+        signedAt: new Date().toISOString(),
+        processedWithDDT: true // Flag per indicare elaborazione avanzata
       };
 
       const updatedProcessed = [...processedDocuments, processedDoc];
@@ -104,16 +113,16 @@ const DocumentSignatureManager = ({
         setSelectedTransporter('');
         setSealNumber('');
         setSignature(null);
-        toast.success(`Documento ${currentDocIndex + 1} processato. Prossimo documento...`);
+        toast.success(`📄 Documento ${currentDocIndex + 1} elaborato con DDT Processor. Prossimo documento...`);
       } else {
         // Tutti i documenti processati
         onDocumentsProcessed(updatedProcessed);
-        toast.success(`Tutti i ${documents.length} documenti sono stati processati!`);
+        toast.success(`🎉 Tutti i ${documents.length} documenti elaborati con correzione geometrica!`);
       }
 
     } catch (error) {
-      console.error('Errore nel processamento documento:', error);
-      toast.error('Errore durante il processamento del documento');
+      console.error('❌ Errore DDT Processor:', error);
+      toast.error(`Errore durante elaborazione avanzata: ${error.message}`);
       setCurrentStep('preview');
     }
   };
