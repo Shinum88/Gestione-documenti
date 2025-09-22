@@ -358,6 +358,33 @@ const CargoManagerDashboard = () => {
           >
             👥 Gestisci Trasportatori
           </button>
+          <button 
+            className="btn-action btn-secondary"
+            onClick={() => {
+              if (transporters.length === 0) {
+                toast.error('Registra prima almeno un trasportatore');
+                setShowTransporterManager(true);
+                return;
+              }
+              // Test rapido del processore documenti
+              const testDoc = {
+                _id: 'test_doc',
+                name: 'Documento Test A4',
+                pages: [documents[0]?.pages[0] || '/api/placeholder/400/600'],
+                signed: false
+              };
+              setSelectedDocuments(new Set(['test_doc']));
+              setShowDocumentProcessor(true);
+            }}
+            style={{ 
+              background: '#f59e0b', 
+              color: 'white',
+              padding: '0.5rem 1rem',
+              fontSize: '0.9rem'
+            }}
+          >
+            📄 Test Struttura A4
+          </button>
         </div>
       </div>
 
