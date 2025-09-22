@@ -267,7 +267,7 @@ const CargoManagerDashboard = () => {
                 onClick={handleApplySignature}
                 disabled={loading}
               >
-                {loading ? 'Applicando...' : `📐 Struttura A4 + Firma (${selectedDocuments.size})`}
+                {loading ? 'Processamento...' : `📐 Applica Struttura A4 + Firma (${selectedDocuments.size})`}
               </button>
             );
           })()}
