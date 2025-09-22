@@ -239,6 +239,9 @@ const CargoManagerDashboard = () => {
                 pages: [documents[0]?.pages[0] || generateTestA4Image()],
                 signed: false
               };
+              
+              // Aggiungi temporaneamente il documento test all'array
+              setDocuments(prev => [...prev, testDoc]);
               setSelectedDocuments(new Set(['test_doc']));
               setShowDocumentProcessor(true);
             }}
