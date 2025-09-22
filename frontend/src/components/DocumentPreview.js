@@ -135,24 +135,23 @@ const DocumentPreview = ({
         calculatedPositions.signatureArea.height
       );
 
-      // 3. Area testo sigillo (indicatore posizione)
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.2)'; // Rosso trasparente
-      const textIndicatorSize = 60;
+      // 3. Area testo sigillo (indicatore posizione) - area rossa dall'immagine di riferimento
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.3)'; // Rosso trasparente
       ctx.fillRect(
-        calculatedPositions.textArea.x - 5,
-        calculatedPositions.textArea.y - textIndicatorSize + 5,
-        textIndicatorSize * 3,
-        textIndicatorSize
+        calculatedPositions.textArea.x - 2,
+        calculatedPositions.textArea.y - calculatedPositions.textArea.height + 2,
+        calculatedPositions.textArea.width,
+        calculatedPositions.textArea.height
       );
       
       ctx.strokeStyle = '#ef4444';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([2, 2]);
+      ctx.lineWidth = 2;
+      ctx.setLineDash([3, 3]);
       ctx.strokeRect(
-        calculatedPositions.textArea.x - 5,
-        calculatedPositions.textArea.y - textIndicatorSize + 5,
-        textIndicatorSize * 3,
-        textIndicatorSize
+        calculatedPositions.textArea.x - 2,
+        calculatedPositions.textArea.y - calculatedPositions.textArea.height + 2,
+        calculatedPositions.textArea.width,
+        calculatedPositions.textArea.height
       );
 
       // === ELEMENTI FINALI (come appariranno nel PDF) ===
