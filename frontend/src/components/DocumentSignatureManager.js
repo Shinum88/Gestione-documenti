@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DocumentPreview from './DocumentPreview';
+import DocumentPreview, { useDocumentProcessor } from './DocumentPreview';
 import SignatureCanvas from './SignatureCanvas';
 import { toast } from 'sonner';
 
