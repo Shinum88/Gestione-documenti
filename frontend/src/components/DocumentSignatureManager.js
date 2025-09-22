@@ -51,9 +51,7 @@ const DocumentSignatureManager = ({
     setCurrentStep('processing');
 
     try {
-      // Processo la prima pagina del documento
-      const { generateProcessedPDF } = useDocumentProcessor();
-      
+      // Processo la prima pagina del documento  
       const processedFirstPage = await generateProcessedPDF(
         currentDocument.pages[0],
         signature,
