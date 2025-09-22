@@ -182,12 +182,12 @@ const DocumentSignatureManager = ({
             </h3>
             
             <DocumentPreview
-              imageData={currentDocument.pages[0]}
+              imageData={currentDocument.pages && currentDocument.pages[0] ? currentDocument.pages[0] : '/api/placeholder/400/600'}
               signature={signature}
               sealNumber={sealNumber}
               transporterName={
                 selectedTransporter ? 
-                transporters.find(t => t.id === selectedTransporter)?.name :
+                (transporters.find(t => t.id === selectedTransporter)?.name || 'Trasportatore Sconosciuto') :
                 'Firma Personalizzata'
               }
             />
