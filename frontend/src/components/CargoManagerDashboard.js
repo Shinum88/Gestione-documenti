@@ -201,66 +201,6 @@ const CargoManagerDashboard = () => {
           >
             👥 Gestisci Trasportatori
           </button>
-          <button 
-            className="btn-action btn-secondary"
-            onClick={() => {
-              if (transporters.length === 0) {
-                toast.error('Registra prima almeno un trasportatore');
-                setShowTransporterManager(true);
-                return;
-              }
-              // Test rapido del processore documenti
-              // Genera un'immagine di test A4 se non ci sono documenti
-              const generateTestA4Image = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = 595; // A4 width at 72 DPI (210mm)
-                canvas.height = 842; // A4 height at 72 DPI (297mm)
-                const ctx = canvas.getContext('2d');
-                
-                // Background bianco
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Bordo
-                ctx.strokeStyle = '#cccccc';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-                
-                // Testo
-                ctx.fillStyle = '#333333';
-                ctx.font = 'bold 24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('DOCUMENTO TEST A4', canvas.width / 2, canvas.height / 2);
-                
-                // Dimensioni A4
-                ctx.font = '16px Arial';
-                ctx.fillText('210mm x 297mm', canvas.width / 2, canvas.height / 2 + 40);
-                ctx.fillText('Formato A4 Standard', canvas.width / 2, canvas.height / 2 + 70);
-                
-                return canvas.toDataURL('image/jpeg', 0.8);
-              };
-
-              const testDoc = {
-                _id: 'test_doc',
-                name: 'Documento Test A4',
-                pages: [documents[0]?.pages[0] || generateTestA4Image()],
-                signed: false
-              };
-              
-              // Aggiungi temporaneamente il documento test all'array
-              setDocuments(prev => [...prev, testDoc]);
-              setSelectedDocuments(new Set(['test_doc']));
-              setShowDocumentProcessor(true);
-            }}
-            style={{ 
-              background: '#f59e0b', 
-              color: 'white',
-              padding: '0.5rem 1rem',
-              fontSize: '0.9rem'
-            }}
-          >
-            📄 Test Struttura A4
-          </button>
         </div>
       </div>
 
