@@ -16,25 +16,26 @@ const DocumentPreview = ({
     return (mm * dpi) / 25.4; // 25.4mm = 1 inch
   };
 
-  // Calcolo proporzioni A4 e posizioni
+  // Calcolo proporzioni A4 e posizioni basate sull'immagine di riferimento
   const calculateA4Positions = (imgWidth, imgHeight) => {
     const A4_RATIO = 1.414; // A4 ratio (297/210)
     const currentRatio = imgHeight / imgWidth;
     
     // Determina se l'immagine è orientata correttamente come A4
-    const isA4Portrait = Math.abs(currentRatio - A4_RATIO) < 0.1;
+    const isA4Portrait = Math.abs(currentRatio - A4_RATIO) < 0.2; // Tolleranza aumentata
     
     if (!isA4Portrait) {
-      console.warn('L\'immagine non sembra essere in formato A4 portrait');
+      console.warn('L\'immagine non sembra essere in formato A4 portrait, ma procedo comunque');
     }
 
     // Calcola DPI approssimativo basandosi sulle dimensioni A4 standard
     const assumedDPI = imgWidth / (210 / 25.4); // Assume larghezza A4 = 210mm
     
-    // Margini in pixel
+    // Margini in pixel - basati sull'analisi dell'immagine di riferimento
+    // Dall'immagine: margini circa 15-20mm su tutti i lati
     const margins = {
-      top: mmToPx(15, assumedDPI),
-      bottom: mmToPx(25, assumedDPI),
+      top: mmToPx(18, assumedDPI),
+      bottom: mmToPx(20, assumedDPI), 
       left: mmToPx(15, assumedDPI),
       right: mmToPx(15, assumedDPI)
     };
@@ -47,19 +48,23 @@ const DocumentPreview = ({
       height: imgHeight - margins.top - margins.bottom
     };
 
-    // Posizione firma (basso a destra)
+    // Posizione firma (basso a destra) - area gialla dall'immagine
+    // Dall'analisi: circa 60-70mm x 25-30mm, 8-12mm dai bordi
     const signatureArea = {
-      width: mmToPx(60, assumedDPI),
-      height: mmToPx(30, assumedDPI),
-      x: imgWidth - mmToPx(10, assumedDPI) - mmToPx(60, assumedDPI),
-      y: imgHeight - mmToPx(10, assumedDPI) - mmToPx(30, assumedDPI)
+      width: mmToPx(65, assumedDPI),
+      height: mmToPx(28, assumedDPI),
+      x: imgWidth - mmToPx(12, assumedDPI) - mmToPx(65, assumedDPI),
+      y: imgHeight - mmToPx(15, assumedDPI) - mmToPx(28, assumedDPI)
     };
 
-    // Posizione testo sigillo/trasportatore (basso a sinistra)
+    // Posizione testo sigillo/trasportatore (basso a sinistra) - area rossa dall'immagine
+    // Dall'analisi: circa 12-15mm dai bordi, spazio per 2 righe di testo
     const textArea = {
-      x: mmToPx(12, assumedDPI),
-      y: imgHeight - mmToPx(12, assumedDPI),
-      fontSize: Math.max(12, mmToPx(3.5, assumedDPI)) // ~10pt in pixel
+      x: mmToPx(15, assumedDPI),
+      y: imgHeight - mmToPx(15, assumedDPI),
+      fontSize: Math.max(10, mmToPx(3.2, assumedDPI)), // ~9-10pt
+      width: mmToPx(80, assumedDPI), // Larghezza area testo
+      height: mmToPx(25, assumedDPI)  // Altezza area testo
     };
 
     return {
