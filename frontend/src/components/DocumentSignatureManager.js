@@ -19,6 +19,21 @@ const DocumentSignatureManager = ({
   const { generateProcessedPDF } = useDocumentProcessor();
   const currentDocument = documents[currentDocIndex];
 
+  // Error handling - if no documents or current document is undefined
+  if (!documents || documents.length === 0 || !currentDocument) {
+    return (
+      <div className="signature-modal">
+        <div className="signature-container" style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2 className="signature-title">Errore</h2>
+          <p>Nessun documento disponibile per il processamento.</p>
+          <button className="btn-clear" onClick={onClose}>
+            Chiudi
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const handleTransporterSelect = (transporterId) => {
     setSelectedTransporter(transporterId);
     const transporter = transporters.find(t => t.id === transporterId);
