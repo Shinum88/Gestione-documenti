@@ -113,19 +113,38 @@ const CargoManagerDashboard = () => {
     setShowDocumentProcessor(true);
   };
 
-  const handleSignatureOptionSelect = (option) => {
-    setShowSignatureOptions(false);
+  const handleDocumentsProcessed = (processedDocs) => {
+    // Aggiorna i documenti con quelli processati
+    const updatedDocuments = documents.map(doc => {
+      const processed = processedDocs.find(p => p._id === doc._id);
+      return processed || doc;
+    });
     
-    if (option === 'seal') {
-      setShowSealNumberDialog(true);
-    } else if (option === 'signature') {
-      if (transporters.length === 0) {
-        toast.error('Nessun trasportatore registrato. Registra prima un trasportatore.');
-        setShowTransporterManager(true);
-        return;
+    setDocuments(updatedDocuments);
+    
+    // Aggiorna stato cartelle
+    const folderIds = processedDocs.map(doc => doc.folderId);
+    const uniqueFolderIds = [...new Set(folderIds)];
+    
+    const updatedFolders = folders.map(folder => {
+      if (uniqueFolderIds.includes(folder._id)) {
+        const folderDocs = getDocumentsForFolder(folder._id);
+        const allSigned = folderDocs.every(doc => 
+          processedDocs.some(p => p._id === doc._id) || doc.signed
+        );
+        
+        if (allSigned) {
+          return { ...folder, status: 'signed' };
+        }
       }
-      applyTransporterSignature();
-    }
+      return folder;
+    });
+    
+    setFolders(updatedFolders);
+    setSelectedDocuments(new Set());
+    setShowDocumentProcessor(false);
+    
+    toast.success(`${processedDocs.length} documenti processati con struttura A4`);
   };
 
   const handleSealNumberSubmit = () => {
