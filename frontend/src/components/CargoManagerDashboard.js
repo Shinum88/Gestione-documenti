@@ -31,6 +31,7 @@ const CargoManagerDashboard = () => {
   const [showSignatureOptions, setShowSignatureOptions] = useState(false);
   const [showSealNumberDialog, setShowSealNumberDialog] = useState(false);
   const [sealNumberData, setSealNumberData] = useState({ transporter: '', number: '' });
+  const [showDocumentProcessor, setShowDocumentProcessor] = useState(false);
 
   const terzisti = ['Danesi', 'Happening', 'Almax', 'Veliero', 'Gab', 'Kuoyo'];
 
