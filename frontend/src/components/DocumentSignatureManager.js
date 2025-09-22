@@ -51,7 +51,6 @@ const DocumentSignatureManager = ({
 
     try {
       // Processo la prima pagina del documento
-      const { useDocumentProcessor } = await import('./DocumentPreview');
       const { generateProcessedPDF } = useDocumentProcessor();
       
       const processedFirstPage = await generateProcessedPDF(
