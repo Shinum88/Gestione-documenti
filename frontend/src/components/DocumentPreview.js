@@ -340,12 +340,12 @@ const DocumentPreview = ({
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         lineHeight: '1.4'
       }}>
-        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Guide Anteprima:</div>
-        <div><span style={{color: '#3b82f6'}}>━━</span> Margini A4 (15-25mm)</div>
-        <div><span style={{color: '#f59e0b'}}>▢</span> Area Firma (60×30mm)</div>
-        <div><span style={{color: '#ef4444'}}>▢</span> Posizione Testo</div>
+        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Guide Anteprima A4:</div>
+        <div><span style={{color: '#3b82f6'}}>━━</span> Margini sicurezza (15-20mm)</div>
+        <div><span style={{color: '#f59e0b'}}>▢</span> Firma elettronica (65×28mm)</div>
+        <div><span style={{color: '#ef4444'}}>▢</span> Sigillo + Trasportatore (80×25mm)</div>
         <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px' }}>
-          Nel PDF finale: solo firma + testo
+          PDF finale: solo firma + testo (guide rimosse)
         </div>
       </div>
     </div>
