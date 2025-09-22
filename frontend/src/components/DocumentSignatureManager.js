@@ -58,6 +58,11 @@ const DocumentSignatureManager = ({
       return;
     }
 
+    if (!currentDocument || !currentDocument.pages || !currentDocument.pages[0]) {
+      toast.error('Documento non valido o pagine mancanti');
+      return;
+    }
+
     const selectedTransporterData = transporters.find(t => t.id === selectedTransporter);
     const transporterName = selectedTransporterData ? 
       `${selectedTransporterData.name} (${selectedTransporterData.company})` : 
