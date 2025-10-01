@@ -25,10 +25,31 @@ const DocumentScanner = ({
   const [selectedCorners, setSelectedCorners] = useState([]);
   const [processedImage, setProcessedImage] = useState(null);
 
-  // Processa automaticamente l'immagine quando OpenCV è pronto
+  // Inizializza l'immagine originale quando OpenCV è pronto (SENZA elaborazione automatica)
   useEffect(() => {
-    if (opencv && imageData && !isProcessing && !isOpenCVLoading) {
-      processImageAutomatically();
+    if (opencv && imageData && !isOpenCVLoading) {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          // Prepara canvas originale
+          const originalCanvas = originalCanvasRef.current;
+          originalCanvas.width = img.width;
+          originalCanvas.height = img.height;
+          const originalCtx = originalCanvas.getContext('2d');
+          originalCtx.drawImage(img, 0, 0);
+
+          console.log('📷 Immagine caricata. Seleziona manualmente i 4 angoli del documento.');
+          toast.info('Clicca sui 4 angoli del documento nell\'ordine: Alto-Sinistra, Alto-Destra, Basso-Destra, Basso-Sinistra');
+          
+          // Attiva direttamente la modalità manuale
+          setManualMode(true);
+        } catch (error) {
+          console.error('❌ Errore caricamento immagine:', error);
+          toast.error('Errore durante il caricamento');
+        }
+      };
+      
+      img.src = imageData;
     }
   }, [opencv, imageData, isOpenCVLoading]);
 
