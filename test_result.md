@@ -137,9 +137,9 @@ frontend:
 
   - task: "Refactoring DocumentScanner per usare OpenCV Context"
     implemented: true
-    working: true
+    working: false
     file: "src/components/DocumentScanner.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -155,6 +155,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ MIGLIORAMENTI TESTATI CON SUCCESSO: Test completo del flusso Login Operatore → Selezione Danesi → Upload immagine test → DocumentScanner. RISULTATI: 1) ✅ Rilevamento bordi esterni FUNZIONA: '🔍 Trovati 1 contorni esterni', '✅ Contorno candidato: area=464697, punti=4, vicino ai bordi', '✅ Bordi esterni del foglio rilevati'. Il sistema ora rileva correttamente il FOGLIO INTERO (non tabelle interne). 2) ⚠️ Filtri leggibilità: errore 'opencv.fastNlMeansDenoising is not a function' ma fallback funziona. 3) ✅ Interfaccia side-by-side mostra originale vs elaborato. 4) ✅ Conferma e salvataggio completato con successo. I miglioramenti al rilevamento automatico sono operativi e funzionanti."
+      - working: false
+        agent: "testing"
+        comment: "❌ RILEVAMENTO AUTOMATICO FALLISCE: Test urgente correzione prospettica rivela problema critico. RISULTATI: 1) ❌ Rilevamento automatico FALLISCE sempre: '🔍 Trovati 1 contorni esterni' ma '⚠️ Contorno scartato: area=243736, ma troppo interno' → '⚠️ Rilevamento automatico fallito'. Il controllo 'nearBorders' è troppo restrittivo. 2) ✅ CORREZIONE PROSPETTICA FUNZIONA: Quando testata manualmente, tutti i log richiesti appaiono: '📐 Applicando correzione prospettica con angoli', '📏 Dimensioni documento: 638x380px', '📍 Punti ordinati', '✅ Matrice trasformazione calcolata', '✅ Trasformazione prospettica applicata - documento appiattito', '✅ Correzione prospettica completata'. 3) ✅ RISULTATO VISIVO CORRETTO: L'immagine elaborata mostra documento perfettamente rettangolare e frontale (non più storto). 4) ✅ Flusso completo funziona con selezione manuale. PROBLEMA: Il rilevamento automatico è ROTTO e richiede sempre intervento manuale."
 
   - task: "Workflow completo Operatore con DocumentScanner"
     implemented: true
