@@ -238,40 +238,55 @@ const DocumentScanner = ({
    */
   const applyPerspectiveCorrection = (src, corners) => {
     try {
-      // Calcola dimensioni del documento corretto
-      const width = Math.max(
+      console.log('📐 Applicando correzione prospettica con angoli:', corners);
+      
+      // Calcola dimensioni del documento corretto usando le distanze tra i punti
+      const width = Math.round(Math.max(
         distance(corners[0], corners[1]),
-        distance(corners[2], corners[3])
-      );
-      const height = Math.max(
+        distance(corners[3], corners[2])
+      ));
+      const height = Math.round(Math.max(
         distance(corners[0], corners[3]),
         distance(corners[1], corners[2])
-      );
+      ));
+      
+      console.log(`📏 Dimensioni documento: ${width}x${height}px`);
 
-      // Punti sorgente (angoli rilevati)
+      // Punti sorgente (angoli rilevati nell'ordine corretto: TL, TR, BR, BL)
       const srcPoints = opencv.matFromArray(4, 1, opencv.CV_32FC2, [
-        corners[0].x, corners[0].y,
-        corners[1].x, corners[1].y,
-        corners[2].x, corners[2].y,
-        corners[3].x, corners[3].y
+        corners[0].x, corners[0].y,  // Top-Left
+        corners[1].x, corners[1].y,  // Top-Right
+        corners[2].x, corners[2].y,  // Bottom-Right
+        corners[3].x, corners[3].y   // Bottom-Left
       ]);
 
-      // Punti destinazione (rettangolo perfetto)
+      // Punti destinazione (rettangolo perfetto frontale)
       const dstPoints = opencv.matFromArray(4, 1, opencv.CV_32FC2, [
-        0, 0,
-        width, 0,
-        width, height,
-        0, height
+        0, 0,                // Top-Left
+        width, 0,            // Top-Right
+        width, height,       // Bottom-Right
+        0, height            // Bottom-Left
       ]);
 
       // Calcola matrice di trasformazione prospettica
       const transformMatrix = opencv.getPerspectiveTransform(srcPoints, dstPoints);
+      console.log('✅ Matrice trasformazione calcolata');
 
-      // Applica trasformazione
+      // Applica trasformazione prospettica (warpPerspective)
       const corrected = new opencv.Mat();
-      opencv.warpPerspective(src, corrected, transformMatrix, new opencv.Size(width, height));
+      opencv.warpPerspective(
+        src, 
+        corrected, 
+        transformMatrix, 
+        new opencv.Size(width, height),
+        opencv.INTER_LINEAR,
+        opencv.BORDER_CONSTANT,
+        new opencv.Scalar(255, 255, 255, 255)
+      );
+      
+      console.log('✅ Trasformazione prospettica applicata - documento "appiattito"');
 
-      // Applica filtri da scanner
+      // Applica filtri da scanner all'immagine corretta
       const processed = applyDocumentFilters(corrected);
 
       // Mostra il risultato nel canvas
@@ -283,10 +298,11 @@ const DocumentScanner = ({
       transformMatrix.delete();
       corrected.delete();
 
+      console.log('✅ Correzione prospettica completata');
       return processed;
 
     } catch (error) {
-      console.error('Errore correzione prospettica:', error);
+      console.error('❌ Errore correzione prospettica:', error);
       return null;
     }
   };
