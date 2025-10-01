@@ -555,11 +555,12 @@ const CargoManagerDashboard = () => {
         )}
       </div>
       
-      {/* Canvas firma semplice */}
-      {showSignatureCanvas && (
-        <SignatureCanvas
-          onSave={handleSignatureSave}
-          onCancel={() => setShowSignatureCanvas(false)}
+      {/* Modale firma avanzato */}
+      {showSignatureModal && (
+        <SignatureModal
+          onClose={() => setShowSignatureModal(false)}
+          onConfirm={handleSignatureConfirm}
+          transporters={transporters}
         />
       )}
       
