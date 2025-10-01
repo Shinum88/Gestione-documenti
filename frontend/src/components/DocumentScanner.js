@@ -652,12 +652,34 @@ const DocumentScanner = ({
 
               {processedImage && (
                 <>
-                  <button className="btn-save" onClick={confirmResult}>
-                    ✅ Conferma e Invia
-                  </button>
-                  <button className="btn-secondary" onClick={resetSelection}>
-                    🔄 Modifica Manualmente
-                  </button>
+                  {showMultiPageOptions ? (
+                    <>
+                      <button 
+                        className="btn-save" 
+                        onClick={() => {
+                          confirmResult();
+                          if (onNextPage) onNextPage();
+                        }}
+                      >
+                        ➕ Pagina Successiva
+                      </button>
+                      <button className="btn-save" onClick={confirmResult}>
+                        ✅ Concludi e Invia
+                      </button>
+                      <button className="btn-secondary" onClick={resetSelection}>
+                        🔄 Modifica Manualmente
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="btn-save" onClick={confirmResult}>
+                        ✅ Conferma e Invia
+                      </button>
+                      <button className="btn-secondary" onClick={resetSelection}>
+                        🔄 Modifica Manualmente
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </>
