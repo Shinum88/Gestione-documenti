@@ -20,6 +20,7 @@ const CameraScanner = () => {
 
   const [isScanning, setIsScanning] = useState(true);
   const [preview, setPreview] = useState(null);
+  const [showDocumentScanner, setShowDocumentScanner] = useState(false);
   const [cameraError, setCameraError] = useState(false);
 
   useEffect(() => {
