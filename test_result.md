@@ -189,7 +189,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Fix schermata nera documento singola pagina"
+    - "Documenti operatore in tab In Attesa"
+    - "Dimensioni firma uniformi 30mm x 20mm"
+    - "Sigillo posizionato 10mm più in alto della firma"
+    - "Descrizione firma con sigillo formato arancione"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
