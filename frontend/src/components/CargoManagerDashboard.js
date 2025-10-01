@@ -302,8 +302,8 @@ const CargoManagerDashboard = () => {
           }
           
           const pdfBlob = pdf.output('blob');
-          const filename = doc.sealNumber 
-            ? `${doc.name}_sigillo_${doc.sealNumber}.pdf`
+          const filename = doc.signature?.seal?.number
+            ? `${doc.name}_sigillo_${doc.signature.seal.number}.pdf`
             : `${doc.name}_firmato.pdf`;
           zip.file(filename, pdfBlob);
         }
