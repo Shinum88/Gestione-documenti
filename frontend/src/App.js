@@ -48,36 +48,38 @@ function App() {
   };
 
   return (
-    <AppContext.Provider value={contextValue}>
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/operator" element={
-              user?.role === 'operatore' 
-                ? <OperatorDashboard /> 
-                : <Navigate to="/login" replace />
-            } />
-            <Route path="/scanner" element={
-              user?.role === 'operatore' 
-                ? <CameraScanner /> 
-                : <Navigate to="/login" replace />
-            } />
-            <Route path="/cargo-manager" element={
-              user?.role === 'carico_merci' 
-                ? <CargoManagerDashboard /> 
-                : <Navigate to="/login" replace />
-            } />
-            <Route path="/" element={
-              user 
-                ? <Navigate to={user.role === 'operatore' ? '/operator' : '/cargo-manager'} replace />
-                : <Navigate to="/login" replace />
-            } />
-          </Routes>
-        </BrowserRouter>
-        <Toaster position="top-center" richColors />
-      </div>
-    </AppContext.Provider>
+    <OpenCVProvider>
+      <AppContext.Provider value={contextValue}>
+        <div className="App">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/operator" element={
+                user?.role === 'operatore' 
+                  ? <OperatorDashboard /> 
+                  : <Navigate to="/login" replace />
+              } />
+              <Route path="/scanner" element={
+                user?.role === 'operatore' 
+                  ? <CameraScanner /> 
+                  : <Navigate to="/login" replace />
+              } />
+              <Route path="/cargo-manager" element={
+                user?.role === 'carico_merci' 
+                  ? <CargoManagerDashboard /> 
+                  : <Navigate to="/login" replace />
+              } />
+              <Route path="/" element={
+                user 
+                  ? <Navigate to={user.role === 'operatore' ? '/operator' : '/cargo-manager'} replace />
+                  : <Navigate to="/login" replace />
+              } />
+            </Routes>
+          </BrowserRouter>
+          <Toaster position="top-center" richColors />
+        </div>
+      </AppContext.Provider>
+    </OpenCVProvider>
   );
 }
 
