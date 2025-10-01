@@ -103,20 +103,19 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Test CRITICO del fix schermata nera con documento SINGOLA PAGINA.
-  PROBLEMA DA VERIFICARE:
-  Prima: Con 1 pagina, dopo "Concludi e Invia" rimaneva schermata nera e documento non arrivava al carico merci.
-  FIX IMPLEMENTATO:
-  - concludeAndShowPreview() ora accetta l'immagine finale come parametro
-  - Pulsante "Concludi e Invia" passa direttamente l'immagine a onFinish()
-  - NON chiude più il modale prima di mostrare l'anteprima
-  FLUSSO TEST SINGOLA PAGINA:
-  1. Login Operatore → Selezione Danesi
-  2. Scatta UNA SOLA Pagina: Upload immagine test, DocumentScanner appare
-  3. Elaborazione Manuale: Seleziona 4 angoli manualmente (TL, TR, BR, BL), Clicca "⚙️ Elabora (4/4 angoli)", Verifica immagine elaborata appare
-  4. Concludi con 1 Pagina (CRITICO): Clicca "✅ Concludi e Invia", VERIFICA LOG CONSOLE, VERIFICA Anteprima appare "Anteprima Documento (1 pagine)" NON schermata nera
-  5. Salvataggio: Clicca "✅ Conferma e Salva Documento", Torna alla Dashboard Operatore
-  6. Verifica Carico Merci: Logout, Login come "carico merci", Vai al folder "Danesi", VERIFICA documento con 1 pagina presente
+  Test COMPLETO delle 3 problematiche risolte: documenti in attesa, dimensioni firma uniformi, descrizione con sigillo.
+  MODIFICHE IMPLEMENTATE:
+  1. ✅ Documenti salvati dall'operatore appaiono in "In Attesa" (non "Firmati")
+  2. ✅ Dimensioni firma uniformi: 30mm x 20mm (sia registrata che manuale)
+  3. ✅ Sigillo posizionato 10mm più in alto della firma
+  4. ✅ Descrizione con formato: "✓ Firmato da: [Nome] 🏷️ Sigillo: [Numero]" (arancione)
+  FLUSSO TEST COMPLETO:
+  PARTE 1: Documento Operatore in "In Attesa"
+  1. Login Operatore → Danesi, 2. Upload immagine singola, 3. Seleziona 4 angoli manualmente, 4. Elabora, 5. Clicca "Concludi e Invia", 6. Anteprima appare, 7. Clicca "Conferma e Salva", 8. Logout, 9. Login come "carico merci", 10. VERIFICA CRITICA: Vai a tab "In Attesa" (NON "Firmati"), Il documento salvato dall'operatore DEVE essere visibile, Stato: "In Attesa" (non firmato)
+  PARTE 2: Firma Manuale con Sigillo
+  11. Nella tab "In Attesa", seleziona il documento, 12. Clicca "✍️ Applica Firma Unica", 13. Seleziona "Firma Manuale", 14. Disegna firma, 15. Salva, 16. COMPILA SIGILLO: Nome Trasportatore: "Trasporti Rossi", N° Sigillo: "TR-2025-001", 17. Clicca "Applica Firma", 18. VERIFICA DESCRIZIONE: Documento ora in tab "Firmati", Sotto il nome documento DEVE apparire: ✓ Firmato da: Firma Manuale, 🏷️ Sigillo: TR-2025-001 (in ARANCIONE #f59e0b)
+  PARTE 3: Download PDF e Verifica Posizionamento
+  19. Seleziona il documento firmato, 20. Clicca "⬇️ Scarica ZIP Documenti Firmati", 21. VERIFICA PDF: Apri il PDF scaricato, Firma: margine destro in basso, dimensioni circa 30mm x 20mm, Sigillo: margine sinistro, posizionato circa 10mm più in alto della firma, Nome trasportatore: "Trasporti Rossi" (bold), Numero sigillo: "Sigillo: TR-2025-001" (sotto nome), Verificare che sigillo non sovrapponga testo del documento
 
 frontend:
   - task: "Fix schermata nera documento singola pagina"
