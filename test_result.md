@@ -252,3 +252,33 @@ agent_communication:
          - Toast successo: "Documento elaborato e inviato al Carico Merci"
       
       CONCLUSIONE: I miglioramenti al rilevamento automatico sono OPERATIVI e FUNZIONANTI. Solo un problema minore con fastNlMeansDenoising che non compromette la funzionalità.
+  - agent: "testing"
+    message: |
+      ❌ URGENT TEST RESULTS - RILEVAMENTO AUTOMATICO FALLISCE SEMPRE
+      
+      Test della correzione prospettica completato con risultati MISTI:
+      
+      🔴 PROBLEMA CRITICO - RILEVAMENTO AUTOMATICO:
+      - ❌ Il rilevamento automatico FALLISCE sempre
+      - Log mostrano: "🔍 Trovati 1 contorni esterni" ma "⚠️ Contorno scartato: area=243736, ma troppo interno"
+      - Il controllo "nearBorders" (linea 161-164 DocumentScanner.js) è troppo restrittivo
+      - Richiede SEMPRE selezione manuale degli angoli
+      
+      ✅ CORREZIONE PROSPETTICA FUNZIONA PERFETTAMENTE:
+      - Tutti i log richiesti dall'utente sono presenti quando si usa selezione manuale:
+        * "📐 Applicando correzione prospettica con angoli"
+        * "📏 Dimensioni documento: 638x380px" 
+        * "📍 Punti ordinati: Top-Left, Top-Right, Bottom-Right, Bottom-Left"
+        * "✅ Matrice trasformazione calcolata"
+        * "✅ Trasformazione prospettica applicata - documento 'appiattito'"
+        * "✅ Correzione prospettica completata"
+      
+      ✅ RISULTATO VISIVO CORRETTO:
+      - L'immagine elaborata (lato destro) mostra documento PERFETTAMENTE RETTANGOLARE
+      - Il documento appare come visto frontalmente (appiattito)
+      - Confronto side-by-side funziona: SINISTRA=storto, DESTRA=rettangolare
+      
+      ✅ FLUSSO COMPLETO FUNZIONA:
+      - Login → Danesi → Upload → DocumentScanner → Selezione manuale → Elaborazione → Conferma → Successo
+      
+      RACCOMANDAZIONE: Aggiustare il controllo "nearBorders" per permettere rilevamento automatico.
