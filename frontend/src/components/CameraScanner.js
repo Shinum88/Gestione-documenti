@@ -96,44 +96,82 @@ const CameraScanner = () => {
     }
   };
 
-  const addPageToDocument = () => {
-    if (!preview) return;
-    
-    const updatedDocument = {
-      ...currentDocument,
-      pages: [...currentDocument.pages, preview]
-    };
-    setCurrentDocument(updatedDocument);
-    
-    // Reset per nuova pagina
-    setPreview(null);
-    setIsScanning(true);
-    
-    toast.success(`Pagina ${updatedDocument.pages.length} aggiunta al documento`);
-  };
-
-  const concludeScanning = () => {
-    if (!preview) return;
-    
-    // Mostra il DocumentScanner per elaborazione automatica
-    setShowDocumentScanner(true);
-  };
-
-  const handleDocumentProcessed = (processedImageData) => {
-    // Aggiungi l'immagine elaborata al documento
-    const finalDocument = {
-      ...currentDocument,
-      pages: [...currentDocument.pages, processedImageData]
-    };
-    
-    // Salva il documento elaborato
-    saveDocumentToDB(finalDocument);
+  /**
+   * Chiamato quando l'utente conferma la pagina elaborata dal DocumentScanner
+   */
+  const handlePageProcessed = (processedImageData) => {
+    // Aggiungi la pagina elaborata all'array
+    setProcessedPages(prev => [...prev, processedImageData]);
     setShowDocumentScanner(false);
+    setCurrentPhoto(null);
+    
+    toast.success(`Pagina ${processedPages.length + 1} elaborata con successo`);
   };
 
+  /**
+   * Chiamato quando l'utente cancella dal DocumentScanner
+   */
   const handleDocumentScannerCancel = () => {
     setShowDocumentScanner(false);
-    // Torna alla preview per permettere di riscansionare
+    setCurrentPhoto(null);
+    // Torna alla fotocamera per riscattare
+    setIsScanning(true);
+  };
+
+  /**
+   * Aggiunge un'altra pagina al documento
+   */
+  const addNextPage = () => {
+    setIsScanning(true);
+    toast.info('Scatta la prossima pagina');
+  };
+
+  /**
+   * Conclude la scansione e mostra anteprima di tutte le pagine
+   */
+  const concludeAndShowPreview = () => {
+    if (processedPages.length === 0) {
+      toast.error('Nessuna pagina elaborata');
+      return;
+    }
+    setShowPreview(true);
+  };
+
+  /**
+   * Conferma finale e salva il documento
+   */
+  const confirmAndSave = () => {
+    const finalDocument = {
+      _id: Date.now().toString(),
+      folderId: currentFolder._id,
+      name: `Documento_${Date.now()}`,
+      pages: processedPages,
+      signed: false,
+      signature: null,
+      sealNumber: null,
+      transporterName: null,
+      processedByOperator: true,
+      createdAt: new Date().toISOString()
+    };
+    
+    // Mock POST /api/documents
+    setDocuments(prev => [...prev, finalDocument]);
+    
+    toast.success(`Documento con ${processedPages.length} pagine salvato!`);
+    
+    // Reset e torna alla dashboard
+    setProcessedPages([]);
+    setShowPreview(false);
+    setCurrentPhoto(null);
+    navigate('/operator');
+  };
+
+  /**
+   * Annulla l'anteprima e torna alla scansione
+   */
+  const cancelPreview = () => {
+    setShowPreview(false);
+    setIsScanning(true);
   };
 
   const saveDocumentToDB = async (documentData) => {
