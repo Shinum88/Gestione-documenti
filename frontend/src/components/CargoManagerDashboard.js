@@ -257,7 +257,7 @@ const CargoManagerDashboard = () => {
               const pageWidth = 210; // A4 width in mm
               const pageHeight = 297; // A4 height in mm
               const margin = 10;
-              const sealOffsetUp = 30; // 30mm più in alto rispetto al fondo (era 20mm)
+              const sealOffsetUp = 20; // Sigillo: 20mm dal fondo (era 30mm, spostato in basso di 10mm)
               
               // Calcola posizione Y per sigillo
               const sealY = pageHeight - signatureHeight - margin - sealOffsetUp;
@@ -282,10 +282,10 @@ const CargoManagerDashboard = () => {
                 }
               }
               
-              // 2. FIRMA - Centro + 25mm a destra, 30mm dal fondo
+              // 2. FIRMA - Centro + 45mm a destra (era +25mm), abbassata di 7mm rispetto al sigillo
               const signatureCenterX = (pageWidth - signatureWidth) / 2;
-              const signatureX = signatureCenterX + 25; // Spostata 25mm a destra del centro
-              const signatureY = sealY; // Stessa altezza del sigillo (30mm dal fondo)
+              const signatureX = signatureCenterX + 45; // Spostata 45mm a destra del centro (+20mm rispetto a prima)
+              const signatureY = sealY + 7; // Abbassata di 7mm rispetto al sigillo
               
               // Nome trasportatore A SINISTRA della firma (grassetto, 9pt come sigillo)
               if (doc.signature.transporterName) {
