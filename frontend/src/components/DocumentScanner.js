@@ -148,30 +148,26 @@ const DocumentScanner = ({
           
           // Deve avere 4 punti (quadrilatero)
           if (approx.rows === 4) {
-            // Verifica che il contorno sia vicino ai bordi dell'immagine
-            // (contorno esterno, non interno)
+            // Estrai i 4 punti
             const points = [];
             for (let j = 0; j < 4; j++) {
               const point = approx.data32S.slice(j * 2, j * 2 + 2);
               points.push({ x: point[0], y: point[1] });
             }
             
-            // Calcola quanto è vicino ai bordi
-            const margin = 20; // pixels
-            const nearBorders = points.some(p => 
-              p.x < margin || p.x > src.cols - margin ||
-              p.y < margin || p.y > src.rows - margin
-            );
+            // Verifica che il contorno copra una grande porzione dell'immagine
+            // Se copre >50% dell'area, è molto probabilmente il foglio
+            const areaCoverage = area / imageArea;
             
-            if (nearBorders) {
-              console.log(`✅ Contorno candidato: area=${area}, punti=4, vicino ai bordi`);
+            if (areaCoverage > 0.5) {
+              console.log(`✅ Contorno candidato: area=${area} (${(areaCoverage * 100).toFixed(1)}%), punti=4`);
               largestArea = area;
               if (bestContour) bestContour.delete();
               if (bestApprox) bestApprox.delete();
               bestContour = contour.clone();
               bestApprox = approx.clone();
             } else {
-              console.log(`⚠️ Contorno scartato: area=${area}, ma troppo interno`);
+              console.log(`⚠️ Contorno scartato: area=${area} (${(areaCoverage * 100).toFixed(1)}%), troppo piccolo`);
             }
           }
           
