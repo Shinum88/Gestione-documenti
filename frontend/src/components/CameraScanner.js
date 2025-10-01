@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../App';
+import DocumentScanner from './DocumentScanner';
 import { toast } from 'sonner';
 
 const CameraScanner = () => {
