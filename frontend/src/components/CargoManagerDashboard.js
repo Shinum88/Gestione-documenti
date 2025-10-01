@@ -262,30 +262,31 @@ const CargoManagerDashboard = () => {
               // Calcola posizione Y per sigillo
               const sealY = pageHeight - signatureHeight - margin - sealOffsetUp;
               
-              // 1. SIGILLO (se presente) - Margine sinistro
+              // 1. SIGILLO (se presente) - Spostato 10mm a destra
               if (doc.signature.seal) {
                 pdf.setFontSize(9);
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont(undefined, 'bold'); // Grassetto
                 
+                const sealX = margin + 10; // Spostato 10mm a destra (da 10mm a 20mm)
                 let currentY = sealY;
                 
                 // Nome trasportatore per sigillo (grassetto)
                 if (doc.signature.seal.transporterName) {
-                  pdf.text(doc.signature.seal.transporterName, margin, currentY);
+                  pdf.text(doc.signature.seal.transporterName, sealX, currentY);
                   currentY += 5;
                 }
                 
                 // Numero sigillo (grassetto)
                 if (doc.signature.seal.number) {
-                  pdf.text(`Sigillo: ${doc.signature.seal.number}`, margin, currentY);
+                  pdf.text(`Sigillo: ${doc.signature.seal.number}`, sealX, currentY);
                 }
               }
               
-              // 2. FIRMA - Centro + 45mm a destra (era +25mm), abbassata di 7mm rispetto al sigillo
+              // 2. FIRMA - Centro + 45mm a destra, alzata di 8mm rispetto alla posizione precedente
               const signatureCenterX = (pageWidth - signatureWidth) / 2;
-              const signatureX = signatureCenterX + 45; // Spostata 45mm a destra del centro (+20mm rispetto a prima)
-              const signatureY = sealY + 7; // Abbassata di 7mm rispetto al sigillo
+              const signatureX = signatureCenterX + 45; // Spostata 45mm a destra del centro
+              const signatureY = sealY - 1; // Alzata di 8mm (era +7mm, ora -1mm rispetto al sigillo)
               
               // Nome trasportatore A SINISTRA della firma (grassetto, 9pt come sigillo)
               if (doc.signature.transporterName) {
