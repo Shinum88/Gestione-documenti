@@ -608,13 +608,24 @@ const DocumentScanner = ({
                       <button 
                         className="btn-save" 
                         onClick={() => {
+                          // Salva la pagina e vai alla prossima
                           confirmResult();
                           if (onNextPage) onNextPage();
                         }}
                       >
                         ➕ Pagina Successiva
                       </button>
-                      <button className="btn-save" onClick={confirmResult}>
+                      <button 
+                        className="btn-save" 
+                        onClick={() => {
+                          // Salva l'ultima pagina e mostra anteprima
+                          confirmResult();
+                          if (onFinish) {
+                            console.log('🏁 Concludi e Invia - chiamo onFinish()');
+                            onFinish();
+                          }
+                        }}
+                      >
                         ✅ Concludi e Invia
                       </button>
                       <button className="btn-secondary" onClick={resetSelection}>
