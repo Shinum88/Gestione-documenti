@@ -101,3 +101,89 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Risolvere l'errore "BindingError: Cannot register public name 'IntVector' twice" causato dal caricamento multiplo di OpenCV.js.
+  Implementare il flusso completo di scansione con DocumentScanner che include:
+  - Rilevamento automatico dei bordi del documento
+  - Correzione prospettica automatica
+  - Applicazione filtri da scanner
+  - Selezione manuale degli angoli come fallback
+
+frontend:
+  - task: "Sistema globale di gestione OpenCV.js"
+    implemented: true
+    working: true
+    file: "src/contexts/OpenCVContext.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Creato OpenCVContext con pattern singleton per garantire caricamento unico di OpenCV.js. Scaricato opencv.js localmente per evitare problemi CORS. Il log mostra: '✅ OpenCV runtime completamente inizializzato' senza errori di binding."
+
+  - task: "Integrazione OpenCVProvider in App.js"
+    implemented: true
+    working: true
+    file: "src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "App wrappata con OpenCVProvider per fornire istanza OpenCV globale a tutti i componenti."
+
+  - task: "Refactoring DocumentScanner per usare OpenCV Context"
+    implemented: true
+    working: "NA"
+    file: "src/components/DocumentScanner.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "DocumentScanner ora usa useOpenCV() hook invece di caricare la libreria internamente. Necessita test end-to-end con immagine reale per verificare rilevamento bordi e correzione prospettica."
+
+  - task: "Workflow completo Operatore con DocumentScanner"
+    implemented: true
+    working: "NA"
+    file: "src/components/CameraScanner.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "CameraScanner integra DocumentScanner nel flusso. Necessita test: cattura foto → elaborazione automatica → conferma → salvataggio documento."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Workflow completo Operatore con DocumentScanner"
+    - "Refactoring DocumentScanner per usare OpenCV Context"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Ho risolto il problema del BindingError implementando:
+      1. OpenCVContext.js - gestione globale singleton di OpenCV
+      2. Scaricato opencv.js localmente in /app/frontend/public/opencv.js per evitare CORS
+      3. App wrappata con OpenCVProvider
+      4. DocumentScanner refactorato per usare hook useOpenCV()
+      
+      Logs confermano caricamento corretto:
+      - ✅ OpenCV runtime completamente inizializzato
+      - ✅ Nessun errore di binding
+      
+      Necessario test end-to-end del flusso: Login Operatore → Selezione terzista → Cattura foto → DocumentScanner (rilevamento automatico bordi + correzione prospettica) → Salvataggio.
