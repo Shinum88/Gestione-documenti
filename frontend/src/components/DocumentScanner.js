@@ -25,10 +25,10 @@ const DocumentScanner = ({
 
   // Processa automaticamente l'immagine quando OpenCV è pronto
   useEffect(() => {
-    if (opencv && imageData && !isProcessing) {
+    if (opencv && imageData && !isProcessing && !isOpenCVLoading) {
       processImageAutomatically();
     }
-  }, [opencv, imageData]);
+  }, [opencv, imageData, isOpenCVLoading]);
 
   /**
    * Rilevamento automatico dei bordi del documento
