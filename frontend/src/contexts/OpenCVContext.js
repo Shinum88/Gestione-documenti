@@ -73,14 +73,13 @@ export const OpenCVProvider = ({ children }) => {
         return;
       }
 
-      // 3. Carica OpenCV.js per la prima volta
-      console.log('🔄 Caricamento OpenCV.js dalla CDN...');
+      // 3. Carica OpenCV.js per la prima volta (da file locale)
+      console.log('🔄 Caricamento OpenCV.js locale...');
       
       const script = document.createElement('script');
-      script.src = 'https://docs.opencv.org/4.x/opencv.js';
+      script.src = '/opencv.js'; // File locale nella cartella public
       script.async = true;
       script.id = 'opencv-global-script';
-      script.crossOrigin = 'anonymous';
 
       script.onload = () => {
         console.log('📦 Script OpenCV caricato, attendo inizializzazione runtime...');
