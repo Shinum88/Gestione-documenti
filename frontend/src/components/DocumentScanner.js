@@ -11,6 +11,7 @@ const DocumentScanner = ({
   onProcessed, 
   onCancel,
   onNextPage = null, // Callback opzionale per "Pagina Successiva"
+  onFinish = null, // Callback opzionale per "Concludi e Invia" (mostra anteprima)
   showMultiPageOptions = false // Mostra opzioni multipagina
 }) => {
   const canvasRef = useRef(null);
