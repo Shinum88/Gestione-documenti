@@ -7,6 +7,7 @@ import CargoManagerDashboard from './components/CargoManagerDashboard';
 import CameraScanner from './components/CameraScanner';
 import { Toaster } from 'sonner';
 import { initializeMockData } from './utils/mockData';
+import { OpenCVProvider } from './contexts/OpenCVContext';
 
 // Context per gestione stato globale
 const AppContext = createContext();
