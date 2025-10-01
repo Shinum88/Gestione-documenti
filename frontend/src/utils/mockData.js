@@ -139,6 +139,7 @@ export const mockData = {
       sealNumber: null,
       transporterName: null,
       transporterCompany: null,
+      processedByOperator: true, // Elaborato dall'operatore
       createdAt: '2025-01-20T10:30:00.000Z'
     },
     {
@@ -151,6 +152,7 @@ export const mockData = {
       sealNumber: null,
       transporterName: null,
       transporterCompany: null,
+      processedByOperator: true,
       createdAt: '2025-01-20T10:45:00.000Z'
     },
     {
@@ -163,6 +165,7 @@ export const mockData = {
       sealNumber: null,
       transporterName: null,
       transporterCompany: null,
+      processedByOperator: true,
       createdAt: '2025-01-20T11:15:00.000Z'
     },
     {
