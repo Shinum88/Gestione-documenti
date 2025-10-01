@@ -133,12 +133,15 @@ frontend:
     working: "NA"
     file: "src/components/TransporterManager.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Sistema gestione trasportatori implementato con: 1) Creazione nuovo trasportatore con nome e azienda, 2) Canvas per disegnare firma, 3) Lista trasportatori registrati con anteprima firma, 4) Salvataggio in localStorage. Necessita test completo."
+      - working: "NA"
+        agent: "testing"
+        comment: "⚠️ TRANSPORTER MANAGER NON TESTATO COMPLETAMENTE: Durante i test, il dropdown trasportatori nel SignatureModal mostrava solo placeholder '-- Seleziona trasportatore --' senza opzioni valide. Questo indica che: 1) I trasportatori mock potrebbero non essere caricati correttamente, 2) Il dropdown potrebbe non essere popolato dai dati localStorage, 3) La sincronizzazione tra TransporterManager e SignatureModal necessita verifica. RACCOMANDAZIONE: Test specifico del flusso trasportatore registrato."
 
   - task: "Firma manuale - SignatureCanvas"
     implemented: true
