@@ -206,187 +206,53 @@ test_plan:
   test_priority: "high_first"
 
 agent_communication:
-  - agent: "main"
-    message: |
-      MIGLIORAMENTI IMPLEMENTATI SU RICHIESTA UTENTE:
-      
-      1. ✅ CORREZIONE PROSPETTICA FUNZIONANTE:
-         - Fix orderPoints() con algoritmo robusto basato su somma/differenza coordinate
-         - Aggiunto logging dettagliato: "📐 Applicando correzione prospettica", "📏 Dimensioni documento", "✅ Trasformazione prospettica applicata - documento appiattito"
-         - warpPerspective con parametri corretti (INTER_LINEAR, BORDER_CONSTANT)
-         - Il documento viene ora correttamente "appiattito" (vista frontale)
-      
-      2. ✅ FLUSSO MULTIPAGINA IMPLEMENTATO:
-         - Scatta foto → DocumentScanner appare IMMEDIATAMENTE
-         - Dopo elaborazione: pulsanti "➕ Pagina Successiva" o "✅ Concludi e Invia"
-         - Tutte le pagine vengono elaborate automaticamente/manualmente
-         - Anteprima finale di tutte le pagine prima del salvataggio
-         - Pulsante "Conferma e Salva Documento" per salvataggio definitivo
-      
-      3. ✅ FIX RILEVAMENTO AUTOMATICO:
-         - Rimosso controllo "nearBorders" troppo restrittivo
-         - Ora usa solo areaCoverage > 50% per identificare il foglio
-         - Dovrebbe funzionare meglio con documenti reali
-      
-      File modificati:
-      - src/components/DocumentScanner.js (correzione prospettica + multipagina)
-      - src/components/CameraScanner.js (flusso multipagina completo)
-      
-      Necessita test end-to-end del nuovo flusso multipagina.
   - agent: "testing"
     message: |
-      🔥 CRITICAL TEST RESULTS - BLACK SCREEN BUG CONFIRMED
+      🎉 SISTEMA FIRMA AVANZATO - TEST COMPLETATO CON SUCCESSO PARZIALE
       
-      COMPLETE MULTI-PAGE FLOW TEST COMPLETED:
+      ✅ FUNZIONALITÀ TESTATE E FUNZIONANTI:
       
-      ✅ MANUAL PROCESSING WORKING PERFECTLY:
-      - ✅ NO automatic processing - only manual corner selection active
-      - ✅ Toast message: "Clicca sui 4 angoli del documento nell'ordine: Alto-Sinistra, Alto-Destra, Basso-Destra, Basso-Sinistra"
-      - ✅ Button counter updates correctly: (0/4) → (1/4) → (2/4) → (3/4) → (4/4)
-      - ✅ All perspective correction logs present for all 3 pages:
-        * "📐 Applicando correzione prospettica con angoli"
-        * "📏 Dimensioni documento: 532x672px"
-        * "✅ Matrice trasformazione calcolata"
-        * "✅ Trasformazione prospettica applicata - documento 'appiattito'"
-        * "✅ Correzione prospettica completata"
+      1. ✅ SIGNATUREMODAL COMPLETAMENTE OPERATIVO:
+         - Modale si apre con titolo "Applica Firma Unica"
+         - Radio buttons "Trasportatore Registrato" e "Firma Manuale" funzionanti
+         - Sezione sigillo con background giallo e testo corretto
+         - Campi sigillo opzionali (Nome Trasportatore, N° Sigillo)
+         - Pulsante "✅ Applica Firma a Documenti Selezionati"
       
-      ✅ MULTI-PAGE FLOW WORKING:
-      - ✅ Page 1: Manual selection → Process → "➕ Pagina Successiva" → Back to camera "Pagine elaborate: 1"
-      - ✅ Page 2: Manual selection → Process → "➕ Pagina Successiva" → Back to camera "Pagine elaborate: 2"  
-      - ✅ Page 3: Manual selection → Process → "✅ Concludi e Invia" button visible
+      2. ✅ FIRMA MANUALE PERFETTA:
+         - Canvas "Inserisci la tua firma" si apre correttamente
+         - Disegno con mouse funziona perfettamente
+         - Salvataggio genera base64 image data
+         - Anteprima firma manuale visibile nel modale principale
+         - Pulsante "🔄 Ridisegna Firma" disponibile
       
-      ❌ CRITICAL BLACK SCREEN BUG CONFIRMED:
-      - ❌ After clicking "✅ Concludi e Invia" on page 3, app shows BLACK SCREEN
-      - ❌ Should navigate to "Anteprima Documento (3 pagine)" but doesn't
-      - ❌ User is stuck on black screen with only "Pagine elaborate: 3" visible
-      - ❌ Cannot proceed to final save or return to dashboard
+      3. ✅ SIGILLO OPZIONALE CONFERMATO:
+         - Sistema permette completamento senza compilare campi sigillo
+         - Console logs mostrano firma applicata senza seal object
+         - Documenti firmati senza sigillo funzionano correttamente
       
-      🔍 ROOT CAUSE IDENTIFIED:
-      - DocumentScanner "✅ Concludi e Invia" button calls confirmResult() 
-      - This calls onProcessed() which adds page but doesn't trigger preview
-      - Missing onFinish prop to distinguish "add page" vs "finish and show preview"
-      - CameraScanner.concludeAndShowPreview() never gets called
+      4. ✅ CONSOLE LOGS PERFETTI:
+         - "✅ Firma configurata: {type: manual, image: data:image/png...}"
+         - "📝 Applicando firma con dati: {type: manual, image: data:image/png...}"
+         - Struttura dati firma corretta
       
-      URGENT FIX NEEDED: Add onFinish prop to DocumentScanner for "✅ Concludi e Invia" button.
-  - agent: "testing"
-    message: |
-      🎉 FINALE COMPLETO - TUTTI I PROBLEMI RISOLTI!
+      5. ✅ FEEDBACK UTENTE:
+         - Toast "Firma applicata a 1 documenti" visibile
+         - Toast "Firma manuale salvata" durante processo
+         - Indicatori "✓ Firmato" sui documenti
       
-      TEST COMPLETO DEL FLUSSO MULTIPAGINA MANUALE SUPERATO CON SUCCESSO:
+      ⚠️ PROBLEMI IDENTIFICATI:
       
-      ✅ ELABORAZIONE SOLO MANUALE CONFERMATA:
-      - ✅ NESSUNA elaborazione automatica attiva - solo selezione manuale angoli
-      - ✅ Toast corretto: "Clicca sui 4 angoli del documento nell'ordine: Alto-Sinistra, Alto-Destra, Basso-Destra, Basso-Sinistra"
-      - ✅ Contatore pulsante: (0/4) → (1/4) → (2/4) → (3/4) → (4/4) → "⚙️ Elabora (4/4 angoli)"
+      1. ⚠️ TRASPORTATORI REGISTRATI:
+         - Dropdown mostra solo "-- Seleziona trasportatore --"
+         - Nessuna opzione valida disponibile
+         - Possibile problema sincronizzazione localStorage
       
-      ✅ CORREZIONE PROSPETTICA PERFETTA - TUTTI I LOG RICHIESTI:
-      Per tutte e 3 le pagine, i log di correzione prospettica sono presenti:
-      - "📐 Applicando correzione prospettica con angoli"
-      - "📏 Dimensioni documento: 298x198px"
-      - "✅ Matrice trasformazione calcolata"
-      - "✅ Trasformazione prospettica applicata - documento 'appiattito'"
-      - "✅ Correzione prospettica completata"
+      2. ⚠️ PERSISTENZA DOCUMENTI FIRMATI:
+         - Dopo firma, switch a tab "Firmati" mostra 0 documenti
+         - Documenti firmati non persistono tra sessioni
+         - ZIP download non testabile senza documenti firmati persistenti
       
-      ✅ FLUSSO MULTIPAGINA COMPLETO:
-      - Pagina 1: Elaborazione manuale → "➕ Pagina Successiva" → "Pagine elaborate: 1"
-      - Pagina 2: Elaborazione manuale → "➕ Pagina Successiva" → "Pagine elaborate: 2"
-      - Pagina 3: Elaborazione manuale → "✅ Concludi e Invia"
-      
-      ✅ FIX SCHERMATA NERA COMPLETAMENTE RISOLTO:
-      - ✅ Log console: "🏁 Concludi e Invia - chiamo onFinish()" presente
-      - ✅ Anteprima appare correttamente: "Anteprima Documento (3 pagine)"
-      - ✅ Griglia con 3 pagine visibili: "Pagina 1", "Pagina 2", "Pagina 3"
-      - ✅ NESSUNA schermata nera
-      
-      ✅ SALVATAGGIO FINALE E RITORNO DASHBOARD:
-      - ✅ "✅ Conferma e Salva Documento" funziona
-      - ✅ Log: "✅ Documento salvato: {_id: 1759314589156, ...pages: Array(3)...}"
-      - ✅ Log: "🔄 Navigazione a /operator"
-      - ✅ Toast: "Documento con 3 pagine salvato!"
-      - ✅ Ritorno corretto alla Dashboard Operatore con lista terzisti
-      
-      🏆 CONCLUSIONE: Il flusso multipagina con elaborazione SOLO manuale e fix schermata nera è COMPLETAMENTE FUNZIONANTE. Tutti i requisiti dell'utente sono stati soddisfatti al 100%.
-  - agent: "testing"
-    message: |
-      ✅ MIGLIORAMENTI DOCUMENTSCANNER TESTATI E VERIFICATI!
-      
-      Test dei miglioramenti richiesti dall'utente:
-      1. ✅ RILEVAMENTO BORDI ESTERNI MIGLIORATO:
-         - Log confermano: "🔍 Trovati 1 contorni esterni"
-         - "✅ Contorno candidato: area=464697, punti=4, vicino ai bordi"
-         - "✅ Bordi esterni del foglio rilevati"
-         - Il sistema ora rileva correttamente il FOGLIO INTERO, non tabelle interne
-         - Soglia area aumentata al 50% funziona correttamente
-         - Controllo vicinanza bordi (20px margin) operativo
-      
-      2. ⚠️ LEGGIBILITÀ TESTO:
-         - Errore: "opencv.fastNlMeansDenoising is not a function"
-         - Il fallback con sharpening funziona comunque
-         - Parametri soglia adattiva più delicati (blockSize 21, C 4) implementati
-      
-      3. ✅ FLUSSO COMPLETO FUNZIONANTE:
-         - Login → Selezione Danesi → Upload → DocumentScanner → Elaborazione → Conferma
-         - Interfaccia side-by-side mostra originale vs elaborato
-         - Toast successo: "Documento elaborato e inviato al Carico Merci"
-      
-      CONCLUSIONE: I miglioramenti al rilevamento automatico sono OPERATIVI e FUNZIONANTI. Solo un problema minore con fastNlMeansDenoising che non compromette la funzionalità.
-  - agent: "testing"
-    message: |
-      ❌ URGENT TEST RESULTS - RILEVAMENTO AUTOMATICO FALLISCE SEMPRE
-      
-      Test della correzione prospettica completato con risultati MISTI:
-      
-      🔴 PROBLEMA CRITICO - RILEVAMENTO AUTOMATICO:
-      - ❌ Il rilevamento automatico FALLISCE sempre
-      - Log mostrano: "🔍 Trovati 1 contorni esterni" ma "⚠️ Contorno scartato: area=243736, ma troppo interno"
-      - Il controllo "nearBorders" (linea 161-164 DocumentScanner.js) è troppo restrittivo
-      - Richiede SEMPRE selezione manuale degli angoli
-      
-      ✅ CORREZIONE PROSPETTICA FUNZIONA PERFETTAMENTE:
-      - Tutti i log richiesti dall'utente sono presenti quando si usa selezione manuale:
-        * "📐 Applicando correzione prospettica con angoli"
-        * "📏 Dimensioni documento: 638x380px" 
-        * "📍 Punti ordinati: Top-Left, Top-Right, Bottom-Right, Bottom-Left"
-        * "✅ Matrice trasformazione calcolata"
-        * "✅ Trasformazione prospettica applicata - documento 'appiattito'"
-        * "✅ Correzione prospettica completata"
-      
-      ✅ RISULTATO VISIVO CORRETTO:
-      - L'immagine elaborata (lato destro) mostra documento PERFETTAMENTE RETTANGOLARE
-      - Il documento appare come visto frontalmente (appiattito)
-      - Confronto side-by-side funziona: SINISTRA=storto, DESTRA=rettangolare
-      
-      ✅ FLUSSO COMPLETO FUNZIONA:
-      - Login → Danesi → Upload → DocumentScanner → Selezione manuale → Elaborazione → Conferma → Successo
-      
-      RACCOMANDAZIONE: Aggiustare il controllo "nearBorders" per permettere rilevamento automatico.
-  - agent: "testing"
-    message: |
-      🎉 BREAKTHROUGH SUCCESS - FLUSSO MULTIPAGINA COMPLETAMENTE FUNZIONANTE!
-      
-      Test completo del nuovo flusso multipagina con correzione prospettica SUPERATO CON SUCCESSO:
-      
-      ✅ RILEVAMENTO AUTOMATICO RISOLTO:
-      - Testato con immagine documento-like (400x300px con bordi neri definiti)
-      - Log perfetti: "🔍 Trovati 1 contorni esterni", "✅ Contorno candidato: area=117201 (97.7%), punti=4"
-      - "✅ Bordi esterni del foglio rilevati" - NESSUN fallimento automatico
-      
-      ✅ CORREZIONE PROSPETTICA PERFETTA - TUTTI I LOG RICHIESTI:
-      - "📐 Applicando correzione prospettica con angoli"
-      - "📏 Dimensioni documento: 395x295px"
-      - "📍 Punti ordinati: {Top-Left, Top-Right, Bottom-Right, Bottom-Left}"
-      - "✅ Trasformazione prospettica applicata - documento appiattito"
-      - "✅ Correzione prospettica completata"
-      
-      ✅ FLUSSO MULTIPAGINA OPERATIVO:
-      - DocumentScanner appare IMMEDIATAMENTE dopo upload immagine
-      - Pulsanti "➕ Pagina Successiva" e "✅ Concludi e Invia" VISIBILI e funzionanti
-      - Prima pagina elaborata → Toast "Scatta la prossima pagina" → Ritorno automatico fotocamera
-      - Contatore "Pagine elaborate: 1" aggiornato correttamente
-      - Sistema pronto per aggiungere pagine successive e anteprima finale
-      
-      ✅ INTERFACCIA SIDE-BY-SIDE PERFETTA:
-      - Originale (sinistra) vs Elaborato (destra) visualizzati correttamente
-      - Documento elaborato mostra correzione prospettica applicata
-      
-      🎯 CONCLUSIONE: Il flusso multipagina con correzione prospettica è COMPLETAMENTE FUNZIONANTE come richiesto dall'utente. Il problema precedente era dovuto a immagini test troppo semplici - con immagini documento-like realistiche tutto funziona perfettamente.
+      🎯 CONCLUSIONE:
+      Il sistema di firma avanzato è FUNZIONANTE per firma manuale e sigillo opzionale.
+      Necessita fix per trasportatori registrati e persistenza documenti.
