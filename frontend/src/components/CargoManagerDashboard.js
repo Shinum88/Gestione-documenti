@@ -6,7 +6,7 @@ import JSZip from 'jszip';
 import jsPDF from 'jspdf';
 import { resetMockData } from '../utils/mockData';
 import TransporterManager from './TransporterManager';
-import DocumentSignatureManager from './DocumentSignatureManager';
+import SignatureCanvas from './SignatureCanvas';
 
 const CargoManagerDashboard = () => {
   const navigate = useNavigate();
