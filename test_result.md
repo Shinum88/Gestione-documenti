@@ -121,15 +121,18 @@ user_problem_statement: |
 frontend:
   - task: "Fix schermata nera documento singola pagina"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/CameraScanner.js, src/components/DocumentScanner.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Fix implementato per problema schermata nera con documenti singola pagina. concludeAndShowPreview() ora accetta immagine finale come parametro, pulsante 'Concludi e Invia' passa direttamente immagine a onFinish(), non chiude più modale prima di mostrare anteprima. Necessita test critico del flusso completo."
+      - working: true
+        agent: "testing"
+        comment: "✅ FIX SCHERMATA NERA COMPLETAMENTE RISOLTO! Test critico eseguito con successo: 1) ✅ LOGIN E NAVIGAZIONE: Login operatore (operatore/Welcome00) → Dashboard → Folder Danesi → Scanner funzionanti. 2) ✅ UPLOAD E ELABORAZIONE: Immagine test caricata, DocumentScanner aperto, 4 angoli selezionati manualmente, elaborazione completata con successo. 3) ✅ CRITICO - NO SCHERMATA NERA: Pulsante 'Concludi e Invia' cliccato, TUTTI i log console attesi trovati (5/5): '🏁 Concludi e Invia - invio immagine finale a onFinish()', '🏁 concludeAndShowPreview chiamato', 'currentPagesCount: 0, hasFinalPage: true', '✅ Aggiunta ultima pagina. Totale: 1', '📄 Mostrando anteprima con 1 pagine'. 4) ✅ ANTEPRIMA PERFETTA: 'Anteprima Documento (1 pagine)' apparsa correttamente, Pagina 1 visualizzata nella griglia, NO schermata nera. 5) ✅ SALVATAGGIO: Documento salvato, navigazione a dashboard operatore completata. 6) ✅ VERIFICA CARICO MERCI: Documento visibile nel carico merci con stato 'In Attesa'. Il fix è COMPLETAMENTE FUNZIONANTE."
 
 metadata:
   created_by: "main_agent"
