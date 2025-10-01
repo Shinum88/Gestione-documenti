@@ -525,12 +525,12 @@ const CargoManagerDashboard = () => {
                           <div>
                             {doc.name} ({doc.pages.length} pag.)
                           </div>
-                          {doc.signed && (
+                          {doc.signed && doc.signature && (
                             <div style={{ fontSize: '0.8rem', color: '#059669', marginTop: '0.25rem' }}>
-                              ✓ Firmato da: {doc.transporterName} ({doc.transporterCompany})
-                              {doc.sealNumber && (
+                              ✓ Firmato da: {doc.signature.transporterName}
+                              {doc.signature.seal && doc.signature.seal.number && (
                                 <span style={{ marginLeft: '0.5rem', color: '#f59e0b' }}>
-                                  🏷️ Sigillo: {doc.sealNumber}
+                                  🏷️ Sigillo: {doc.signature.seal.number}
                                 </span>
                               )}
                             </div>
