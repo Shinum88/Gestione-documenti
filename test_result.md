@@ -163,12 +163,15 @@ frontend:
     working: "NA"
     file: "src/components/CargoManagerDashboard.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Funzionalità download ZIP implementata con: 1) Generazione PDF con firma posizionata a destra, 2) Sigillo posizionato a sinistra alla stessa altezza della firma, 3) Nome file con numero sigillo se presente. Necessita test completo del download e verifica posizionamento elementi."
+      - working: "NA"
+        agent: "testing"
+        comment: "⚠️ DOWNLOAD ZIP NON TESTATO COMPLETAMENTE: Durante i test, dopo aver firmato documenti, il passaggio alla tab 'Firmati' mostrava 0 documenti invece dei documenti firmati. Questo potrebbe indicare: 1) Problema di persistenza stato dopo firma, 2) Filtro tab non funzionante correttamente, 3) Documenti firmati non salvati correttamente. Il codice per ZIP download è implementato ma necessita verifica con documenti effettivamente firmati e persistenti."
 
   - task: "Integrazione sistema firma in CargoManagerDashboard"
     implemented: true
