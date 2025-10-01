@@ -133,6 +133,54 @@ frontend:
         agent: "testing"
         comment: "✅ FIX SCHERMATA NERA COMPLETAMENTE RISOLTO! Test critico eseguito con successo: 1) ✅ LOGIN E NAVIGAZIONE: Login operatore (operatore/Welcome00) → Dashboard → Folder Danesi → Scanner funzionanti. 2) ✅ UPLOAD E ELABORAZIONE: Immagine test caricata, DocumentScanner aperto, 4 angoli selezionati manualmente, elaborazione completata con successo. 3) ✅ CRITICO - NO SCHERMATA NERA: Pulsante 'Concludi e Invia' cliccato, TUTTI i log console attesi trovati (5/5): '🏁 Concludi e Invia - invio immagine finale a onFinish()', '🏁 concludeAndShowPreview chiamato', 'currentPagesCount: 0, hasFinalPage: true', '✅ Aggiunta ultima pagina. Totale: 1', '📄 Mostrando anteprima con 1 pagine'. 4) ✅ ANTEPRIMA PERFETTA: 'Anteprima Documento (1 pagine)' apparsa correttamente, Pagina 1 visualizzata nella griglia, NO schermata nera. 5) ✅ SALVATAGGIO: Documento salvato, navigazione a dashboard operatore completata. 6) ✅ VERIFICA CARICO MERCI: Documento visibile nel carico merci con stato 'In Attesa'. Il fix è COMPLETAMENTE FUNZIONANTE."
 
+  - task: "Documenti operatore in tab In Attesa"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js, src/utils/mockData.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementato: documenti salvati dall'operatore appaiono correttamente in tab 'In Attesa' invece che 'Firmati'. Status 'pending' assegnato ai documenti processedByOperator. Necessita test completo del flusso operatore → carico merci."
+
+  - task: "Dimensioni firma uniformi 30mm x 20mm"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementato: dimensioni firma standardizzate a 30mm x 20mm per sia firma registrata che manuale nel PDF. Ridotte da 50mm x 25mm precedenti. Necessita test download PDF per verifica dimensioni."
+
+  - task: "Sigillo posizionato 10mm più in alto della firma"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementato: sigillo posizionato 10mm più in alto della firma nel PDF. Calcolo: sealY = pageHeight - signatureHeight - margin - sealOffsetUp (10mm). Necessita test download PDF per verifica posizionamento."
+
+  - task: "Descrizione firma con sigillo formato arancione"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementato: descrizione formato '✓ Firmato da: [Nome] 🏷️ Sigillo: [Numero]' con colore arancione #f59e0b per parte sigillo. Visibile sotto nome documento in lista. Necessita test UI per verifica formato e colore."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
