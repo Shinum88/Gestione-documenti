@@ -147,5 +147,173 @@
                 person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
             });
         </script>
+        
+        <!-- Firebase SDK (CDN) -->
+        <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+        
+        <script>
+            // 🔑 CONFIGURAZIONE FIREBASE
+            const firebaseConfig = {
+                apiKey: "AIzaSyB8zvDEuIe4xuTRhIz0LHpRObBm-qqNMbc",
+                authDomain: "ddt-logistica.firebaseapp.com",
+                projectId: "ddt-logistica",
+                storageBucket: "ddt-logistica.firebasestorage.app",
+                messagingSenderId: "84771320411",
+                appId: "1:84771320411:web:2eaedd72fe3791e7d4857e",
+                measurementId: "G-5P0V4XX7JY"
+            };
+
+            // Inizializza Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // ✅ FUNZIONI GLOBALI per salvare/leggere documenti
+            window.salvaDocumento = async (documento) => {
+                try {
+                    const docRef = await db.collection('documents').add({
+                        ...documento,
+                        createdAt: documento.createdAt || new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    console.log("✅ Documento salvato su Firebase con ID:", docRef.id);
+                    return docRef.id;
+                } catch (error) {
+                    console.error("❌ Errore Firebase salvataggio:", error);
+                    throw error;
+                }
+            };
+
+            window.leggiDocumenti = async () => {
+                try {
+                    const snapshot = await db.collection('documents').get();
+                    const documenti = snapshot.docs.map(doc => ({ 
+                        id: doc.id, 
+                        _id: doc.id,
+                        ...doc.data() 
+                    }));
+                    console.log(`✅ Letti ${documenti.length} documenti da Firebase`);
+                    return documenti;
+                } catch (error) {
+                    console.error("❌ Errore Firebase lettura:", error);
+                    throw error;
+                }
+            };
+
+            // ✅ Funzione per salvare folder
+            window.salvaFolder = async (folder) => {
+                try {
+                    const docRef = await db.collection('folders').add({
+                        ...folder,
+                        createdAt: folder.createdAt || new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    console.log("✅ Folder salvato su Firebase con ID:", docRef.id);
+                    return docRef.id;
+                } catch (error) {
+                    console.error("❌ Errore Firebase salvataggio folder:", error);
+                    throw error;
+                }
+            };
+
+            window.leggiFolders = async () => {
+                try {
+                    const snapshot = await db.collection('folders').get();
+                    const folders = snapshot.docs.map(doc => ({ 
+                        id: doc.id, 
+                        _id: doc.id,
+                        ...doc.data() 
+                    }));
+                    console.log(`✅ Letti ${folders.length} folders da Firebase`);
+                    return folders;
+                } catch (error) {
+                    console.error("❌ Errore Firebase lettura folders:", error);
+                    throw error;
+                }
+            };
+
+            // ✅ Funzione per firmare documento
+            window.firmaDocumento = async (docId, signatureData) => {
+                try {
+                    await db.collection('documents').doc(docId).update({
+                        signed: true,
+                        signature: signatureData,
+                        signedAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+                    console.log("✅ Documento firmato:", docId);
+                } catch (error) {
+                    console.error("❌ Errore Firebase firma:", error);
+                    throw error;
+                }
+            };
+
+            // ✅ Funzione per salvare trasportatore
+            window.salvaTrasportatore = async (transporter) => {
+                try {
+                    const docRef = await db.collection('transporters').add({
+                        ...transporter,
+                        createdAt: transporter.createdAt || new Date().toISOString()
+                    });
+                    console.log("✅ Trasportatore salvato su Firebase con ID:", docRef.id);
+                    return docRef.id;
+                } catch (error) {
+                    console.error("❌ Errore Firebase salvataggio trasportatore:", error);
+                    throw error;
+                }
+            };
+
+            window.leggiTrasportatori = async () => {
+                try {
+                    const snapshot = await db.collection('transporters').get();
+                    const trasportatori = snapshot.docs.map(doc => ({ 
+                        id: doc.id,
+                        ...doc.data() 
+                    }));
+                    console.log(`✅ Letti ${trasportatori.length} trasportatori da Firebase`);
+                    return trasportatori;
+                } catch (error) {
+                    console.error("❌ Errore Firebase lettura trasportatori:", error);
+                    throw error;
+                }
+            };
+
+            // ✅ Funzione per migrare da localStorage a Firebase
+            window.sincronizzaLocalStorageConFirebase = async () => {
+                try {
+                    console.log("🔄 Sincronizzazione localStorage → Firebase...");
+                    
+                    const localFolders = JSON.parse(localStorage.getItem('mockFolders') || '[]');
+                    const localDocuments = JSON.parse(localStorage.getItem('mockDocuments') || '[]');
+                    const localTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
+                    
+                    let stats = { folders: 0, documents: 0, transporters: 0 };
+                    
+                    for (const folder of localFolders) {
+                        await window.salvaFolder(folder);
+                        stats.folders++;
+                    }
+                    
+                    for (const documento of localDocuments) {
+                        await window.salvaDocumento(documento);
+                        stats.documents++;
+                    }
+                    
+                    for (const transporter of localTransporters) {
+                        await window.salvaTrasportatore(transporter);
+                        stats.transporters++;
+                    }
+                    
+                    console.log("✅ Sincronizzazione completata:", stats);
+                    return stats;
+                } catch (error) {
+                    console.error("❌ Errore sincronizzazione:", error);
+                    throw error;
+                }
+            };
+
+            console.log("🔥 Firebase inizializzato e funzioni globali pronte!");
+            console.log("Prova: window.leggiDocumenti()");
+        </script>
     </body>
 </html>
