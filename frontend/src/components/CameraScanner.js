@@ -75,7 +75,10 @@ const CameraScanner = () => {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     const imageData = canvas.toDataURL('image/jpeg', 0.8);
-    setPreview(imageData);
+    
+    // Mostra immediatamente DocumentScanner per elaborare la foto
+    setCurrentPhoto(imageData);
+    setShowDocumentScanner(true);
     setIsScanning(false);
   };
 
@@ -84,7 +87,9 @@ const CameraScanner = () => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setPreview(e.target.result);
+        // Mostra immediatamente DocumentScanner per elaborare la foto
+        setCurrentPhoto(e.target.result);
+        setShowDocumentScanner(true);
         setIsScanning(false);
       };
       reader.readAsDataURL(file);
