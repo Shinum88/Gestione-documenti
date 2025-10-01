@@ -20,47 +20,96 @@ const DocumentScanner = ({
   const [selectedCorners, setSelectedCorners] = useState([]);
   const [processedImage, setProcessedImage] = useState(null);
 
-  // Carica OpenCV.js
+  // Carica OpenCV.js una sola volta globalmente
   useEffect(() => {
     const loadOpenCV = () => {
-      if (window.cv) {
+      // Se OpenCV è già disponibile, usalo direttamente
+      if (window.cv && window.cv.Mat) {
+        console.log('✅ OpenCV.js già disponibile');
         setOpencv(window.cv);
         setIsLoading(false);
         return;
       }
 
-      // Carica OpenCV.js da CDN
+      // Controlla se lo script è già in fase di caricamento
+      if (document.querySelector('script[src*="opencv.js"]')) {
+        console.log('⏳ OpenCV.js già in caricamento, attendo...');
+        const checkInterval = setInterval(() => {
+          if (window.cv && window.cv.Mat) {
+            console.log('✅ OpenCV.js caricato da script esistente');
+            setOpencv(window.cv);
+            setIsLoading(false);
+            clearInterval(checkInterval);
+          }
+        }, 100);
+        
+        // Timeout dopo 30 secondi
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (!window.cv) {
+            console.error('❌ Timeout caricamento OpenCV.js');
+            toast.error('Timeout caricamento OpenCV.js');
+            setIsLoading(false);
+          }
+        }, 30000);
+        return;
+      }
+
+      // Carica OpenCV.js da CDN solo se non è già presente
+      console.log('🔄 Caricamento OpenCV.js...');
       const script = document.createElement('script');
       script.src = 'https://docs.opencv.org/4.x/opencv.js';
       script.async = true;
+      script.id = 'opencv-script'; // ID per identificazione
+      
       script.onload = () => {
-        const checkOpenCV = () => {
+        console.log('📦 Script OpenCV caricato, attendo inizializzazione...');
+        
+        // Attendi che OpenCV sia completamente inizializzato
+        const waitForOpenCV = () => {
           if (window.cv && window.cv.Mat) {
-            console.log('✅ OpenCV.js caricato con successo');
+            console.log('✅ OpenCV.js completamente inizializzato');
             setOpencv(window.cv);
             setIsLoading(false);
           } else {
-            setTimeout(checkOpenCV, 100);
+            setTimeout(waitForOpenCV, 100);
           }
         };
-        checkOpenCV();
+        
+        // Gestisci anche l'event onRuntimeInitialized se disponibile
+        if (window.cv) {
+          if (window.cv.Mat) {
+            // Già pronto
+            setOpencv(window.cv);
+            setIsLoading(false);
+          } else {
+            // Attendi onRuntimeInitialized
+            window.cv.onRuntimeInitialized = () => {
+              console.log('✅ OpenCV runtime inizializzato');
+              setOpencv(window.cv);
+              setIsLoading(false);
+            };
+          }
+        } else {
+          waitForOpenCV();
+        }
       };
-      script.onerror = () => {
-        console.error('❌ Errore caricamento OpenCV.js');
+      
+      script.onerror = (error) => {
+        console.error('❌ Errore caricamento OpenCV.js:', error);
         toast.error('Impossibile caricare OpenCV.js');
         setIsLoading(false);
       };
       
       document.head.appendChild(script);
-      
-      return () => {
-        if (document.head.contains(script)) {
-          document.head.removeChild(script);
-        }
-      };
     };
 
     loadOpenCV();
+
+    // Cleanup: rimuovi lo script solo se questo componente lo ha aggiunto
+    return () => {
+      // Non rimuovere lo script per permettere riutilizzo in altre istanze
+    };
   }, []);
 
   // Processa automaticamente l'immagine quando OpenCV è pronto
