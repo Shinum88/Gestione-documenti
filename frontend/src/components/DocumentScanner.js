@@ -585,26 +585,17 @@ const DocumentScanner = ({
             </div>
           ) : (
             <>
-              {!manualMode && !processedImage && (
-                <button 
-                  className="btn-secondary" 
-                  onClick={() => setManualMode(true)}
-                >
-                  🖱️ Selezione Manuale
-                </button>
-              )}
-
-              {manualMode && (
+              {!processedImage && (
                 <>
                   <button 
                     className="btn-secondary" 
                     onClick={processManualSelection}
                     disabled={selectedCorners.length !== 4}
                   >
-                    ⚙️ Elabora Selezione
+                    ⚙️ Elabora ({selectedCorners.length}/4 angoli)
                   </button>
                   <button className="btn-clear" onClick={resetSelection}>
-                    🔄 Reset
+                    🔄 Reset Selezione
                   </button>
                 </>
               )}
