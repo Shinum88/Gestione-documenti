@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useOpenCV } from '../contexts/OpenCVContext';
 
 /**
  * DocumentScanner - Componente per rilevamento automatico bordi e correzione prospettica
@@ -12,105 +13,15 @@ const DocumentScanner = ({
 }) => {
   const canvasRef = useRef(null);
   const originalCanvasRef = useRef(null);
-  const [opencv, setOpencv] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Usa OpenCV dal context globale
+  const { opencv, isLoading: isOpenCVLoading, error: openCVError } = useOpenCV();
+  
   const [isProcessing, setIsProcessing] = useState(false);
   const [corners, setCorners] = useState(null);
   const [manualMode, setManualMode] = useState(false);
   const [selectedCorners, setSelectedCorners] = useState([]);
   const [processedImage, setProcessedImage] = useState(null);
-
-  // Carica OpenCV.js una sola volta globalmente
-  useEffect(() => {
-    const loadOpenCV = () => {
-      // Se OpenCV è già disponibile, usalo direttamente
-      if (window.cv && window.cv.Mat) {
-        console.log('✅ OpenCV.js già disponibile');
-        setOpencv(window.cv);
-        setIsLoading(false);
-        return;
-      }
-
-      // Controlla se lo script è già in fase di caricamento
-      if (document.querySelector('script[src*="opencv.js"]')) {
-        console.log('⏳ OpenCV.js già in caricamento, attendo...');
-        const checkInterval = setInterval(() => {
-          if (window.cv && window.cv.Mat) {
-            console.log('✅ OpenCV.js caricato da script esistente');
-            setOpencv(window.cv);
-            setIsLoading(false);
-            clearInterval(checkInterval);
-          }
-        }, 100);
-        
-        // Timeout dopo 30 secondi
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          if (!window.cv) {
-            console.error('❌ Timeout caricamento OpenCV.js');
-            toast.error('Timeout caricamento OpenCV.js');
-            setIsLoading(false);
-          }
-        }, 30000);
-        return;
-      }
-
-      // Carica OpenCV.js da CDN solo se non è già presente
-      console.log('🔄 Caricamento OpenCV.js...');
-      const script = document.createElement('script');
-      script.src = 'https://docs.opencv.org/4.x/opencv.js';
-      script.async = true;
-      script.id = 'opencv-script'; // ID per identificazione
-      
-      script.onload = () => {
-        console.log('📦 Script OpenCV caricato, attendo inizializzazione...');
-        
-        // Attendi che OpenCV sia completamente inizializzato
-        const waitForOpenCV = () => {
-          if (window.cv && window.cv.Mat) {
-            console.log('✅ OpenCV.js completamente inizializzato');
-            setOpencv(window.cv);
-            setIsLoading(false);
-          } else {
-            setTimeout(waitForOpenCV, 100);
-          }
-        };
-        
-        // Gestisci anche l'event onRuntimeInitialized se disponibile
-        if (window.cv) {
-          if (window.cv.Mat) {
-            // Già pronto
-            setOpencv(window.cv);
-            setIsLoading(false);
-          } else {
-            // Attendi onRuntimeInitialized
-            window.cv.onRuntimeInitialized = () => {
-              console.log('✅ OpenCV runtime inizializzato');
-              setOpencv(window.cv);
-              setIsLoading(false);
-            };
-          }
-        } else {
-          waitForOpenCV();
-        }
-      };
-      
-      script.onerror = (error) => {
-        console.error('❌ Errore caricamento OpenCV.js:', error);
-        toast.error('Impossibile caricare OpenCV.js');
-        setIsLoading(false);
-      };
-      
-      document.head.appendChild(script);
-    };
-
-    loadOpenCV();
-
-    // Cleanup: rimuovi lo script solo se questo componente lo ha aggiunto
-    return () => {
-      // Non rimuovere lo script per permettere riutilizzo in altre istanze
-    };
-  }, []);
 
   // Processa automaticamente l'immagine quando OpenCV è pronto
   useEffect(() => {
