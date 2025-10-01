@@ -94,45 +94,85 @@ const DocumentScanner = ({
 
   /**
    * Rileva i bordi del documento usando OpenCV
+   * MIGLIORATO: rileva il contorno ESTERNO del foglio, non tabelle interne
    */
   const detectDocumentCorners = (src) => {
     try {
+      const imageArea = src.rows * src.cols;
+      
       // 1. Converti in scala di grigi
       const gray = new opencv.Mat();
       opencv.cvtColor(src, gray, opencv.COLOR_RGBA2GRAY);
 
-      // 2. Applica filtro Gaussiano per ridurre il rumore
+      // 2. Aumenta contrasto per migliorare rilevamento bordi
+      const enhanced = new opencv.Mat();
+      opencv.equalizeHist(gray, enhanced);
+
+      // 3. Applica filtro Gaussiano per ridurre il rumore
       const blurred = new opencv.Mat();
-      opencv.GaussianBlur(gray, blurred, new opencv.Size(5, 5), 0);
+      opencv.GaussianBlur(enhanced, blurred, new opencv.Size(7, 7), 0);
 
-      // 3. Rilevamento bordi con Canny
+      // 4. Rilevamento bordi con Canny (soglie più basse per catturare bordi deboli)
       const edges = new opencv.Mat();
-      opencv.Canny(blurred, edges, 75, 200);
+      opencv.Canny(blurred, edges, 30, 100);
 
-      // 4. Trova contorni
+      // 5. Dilatazione per collegare bordi spezzati
+      const kernel = opencv.getStructuringElement(opencv.MORPH_RECT, new opencv.Size(5, 5));
+      const dilated = new opencv.Mat();
+      opencv.dilate(edges, dilated, kernel);
+
+      // 6. Trova contorni ESTERNI solamente
       const contours = new opencv.MatVector();
       const hierarchy = new opencv.Mat();
-      opencv.findContours(edges, contours, hierarchy, opencv.RETR_LIST, opencv.CHAIN_APPROX_SIMPLE);
+      opencv.findContours(dilated, contours, hierarchy, opencv.RETR_EXTERNAL, opencv.CHAIN_APPROX_SIMPLE);
 
-      // 5. Trova il contorno più grande che approssima un rettangolo
+      // 7. Trova il contorno più grande che approssima un rettangolo
       let largestArea = 0;
       let bestContour = null;
+      let bestApprox = null;
+
+      console.log(`🔍 Trovati ${contours.size()} contorni esterni`);
 
       for (let i = 0; i < contours.size(); i++) {
         const contour = contours.get(i);
         const area = opencv.contourArea(contour);
         
-        if (area > largestArea && area > src.rows * src.cols * 0.1) { // Almeno 10% dell'immagine
-          // Approssima il contorno
-          const epsilon = 0.02 * opencv.arcLength(contour, true);
+        // Il contorno deve essere ALMENO il 50% dell'immagine (non 10%)
+        // Questo assicura che prendiamo il foglio intero, non elementi interni
+        if (area > largestArea && area > imageArea * 0.5) {
+          // Approssima il contorno con tolleranza variabile
+          const perimeter = opencv.arcLength(contour, true);
+          const epsilon = 0.02 * perimeter;
           const approx = new opencv.Mat();
           opencv.approxPolyDP(contour, approx, epsilon, true);
           
-          // Se ha 4 punti, è probabilmente un documento
+          // Deve avere 4 punti (quadrilatero)
           if (approx.rows === 4) {
-            largestArea = area;
-            if (bestContour) bestContour.delete();
-            bestContour = approx.clone();
+            // Verifica che il contorno sia vicino ai bordi dell'immagine
+            // (contorno esterno, non interno)
+            const points = [];
+            for (let j = 0; j < 4; j++) {
+              const point = approx.data32S.slice(j * 2, j * 2 + 2);
+              points.push({ x: point[0], y: point[1] });
+            }
+            
+            // Calcola quanto è vicino ai bordi
+            const margin = 20; // pixels
+            const nearBorders = points.some(p => 
+              p.x < margin || p.x > src.cols - margin ||
+              p.y < margin || p.y > src.rows - margin
+            );
+            
+            if (nearBorders) {
+              console.log(`✅ Contorno candidato: area=${area}, punti=4, vicino ai bordi`);
+              largestArea = area;
+              if (bestContour) bestContour.delete();
+              if (bestApprox) bestApprox.delete();
+              bestContour = contour.clone();
+              bestApprox = approx.clone();
+            } else {
+              console.log(`⚠️ Contorno scartato: area=${area}, ma troppo interno`);
+            }
           }
           
           approx.delete();
@@ -141,29 +181,36 @@ const DocumentScanner = ({
 
       // Cleanup
       gray.delete();
+      enhanced.delete();
       blurred.delete();
       edges.delete();
+      kernel.delete();
+      dilated.delete();
       contours.delete();
       hierarchy.delete();
 
-      if (bestContour) {
+      if (bestApprox) {
         // Estrai i 4 punti
         const points = [];
         for (let i = 0; i < 4; i++) {
-          const point = bestContour.data32S.slice(i * 2, i * 2 + 2);
+          const point = bestApprox.data32S.slice(i * 2, i * 2 + 2);
           points.push({ x: point[0], y: point[1] });
         }
         
-        bestContour.delete();
+        if (bestContour) bestContour.delete();
+        bestApprox.delete();
+        
+        console.log('✅ Bordi esterni del foglio rilevati:', points);
         
         // Ordina i punti (top-left, top-right, bottom-right, bottom-left)
         return orderPoints(points);
       }
 
+      console.warn('⚠️ Nessun contorno esterno valido trovato');
       return null;
       
     } catch (error) {
-      console.error('Errore rilevamento bordi:', error);
+      console.error('❌ Errore rilevamento bordi:', error);
       return null;
     }
   };
