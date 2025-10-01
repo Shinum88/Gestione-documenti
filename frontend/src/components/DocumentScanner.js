@@ -54,70 +54,8 @@ const DocumentScanner = ({
   }, [opencv, imageData, isOpenCVLoading]);
 
   /**
-   * Rilevamento automatico dei bordi del documento
-   */
-  const processImageAutomatically = async () => {
-    setIsProcessing(true);
-    
-    try {
-      console.log('🔄 Iniziando rilevamento automatico bordi...');
-      
-      const img = new Image();
-      img.onload = () => {
-        try {
-          // Prepara canvas originale
-          const originalCanvas = originalCanvasRef.current;
-          originalCanvas.width = img.width;
-          originalCanvas.height = img.height;
-          const originalCtx = originalCanvas.getContext('2d');
-          originalCtx.drawImage(img, 0, 0);
-
-          // Converti in Mat OpenCV
-          const src = opencv.imread(originalCanvas);
-          
-          // Rileva i bordi del documento
-          const detectedCorners = detectDocumentCorners(src);
-          
-          if (detectedCorners && detectedCorners.length === 4) {
-            console.log('✅ Bordi rilevati automaticamente:', detectedCorners);
-            setCorners(detectedCorners);
-            
-            // Applica correzione prospettica automatica
-            const correctedImage = applyPerspectiveCorrection(src, detectedCorners);
-            setProcessedImage(correctedImage);
-            
-            toast.success('Documento rilevato automaticamente!');
-          } else {
-            console.warn('⚠️ Rilevamento automatico fallito');
-            toast.warning('Rilevamento automatico fallito. Usa modalità manuale.');
-            setManualMode(true);
-          }
-          
-          // Cleanup
-          src.delete();
-          
-        } catch (error) {
-          console.error('❌ Errore elaborazione:', error);
-          toast.error('Errore durante l\'elaborazione');
-          setManualMode(true);
-        } finally {
-          setIsProcessing(false);
-        }
-      };
-      
-      img.src = imageData;
-      
-    } catch (error) {
-      console.error('❌ Errore rilevamento automatico:', error);
-      toast.error('Errore durante il rilevamento automatico');
-      setIsProcessing(false);
-      setManualMode(true);
-    }
-  };
-
-  /**
-   * Rileva i bordi del documento usando OpenCV
-   * MIGLIORATO: rileva il contorno ESTERNO del foglio, non tabelle interne
+   * Rileva i bordi del documento usando OpenCV - FUNZIONE RIMOSSA
+   * Elaborazione manuale sempre attiva per richiesta utente
    */
   const detectDocumentCorners = (src) => {
     try {
