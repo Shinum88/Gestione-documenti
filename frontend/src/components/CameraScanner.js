@@ -193,10 +193,15 @@ const CameraScanner = () => {
     // Se ci sono pagine elaborate, chiedi conferma
     if (processedPages.length > 0) {
       if (window.confirm(`Hai ${processedPages.length} pagine elaborate. Vuoi scartarle?`)) {
+        stopCamera();
         setProcessedPages([]);
+        setShowPreview(false);
+        setCurrentPhoto(null);
+        setShowDocumentScanner(false);
         navigate('/operator');
       }
     } else {
+      stopCamera();
       navigate('/operator');
     }
   };
