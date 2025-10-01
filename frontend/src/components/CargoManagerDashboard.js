@@ -252,13 +252,13 @@ const CargoManagerDashboard = () => {
             
             // Aggiungi firma sulla prima pagina (margine destro, in basso)
             if (i === 0 && doc.signature?.image) {
-              const signatureWidth = 50;
-              const signatureHeight = 25;
+              const signatureWidth = 30;  // Ridotto da 50mm a 30mm
+              const signatureHeight = 20; // Ridotto da 25mm a 20mm
               const pageWidth = 210; // A4 width in mm
               const pageHeight = 297; // A4 height in mm
               const margin = 10;
               
-              // Firma a destra
+              // Firma a destra, in basso
               const signatureX = pageWidth - signatureWidth - margin;
               const signatureY = pageHeight - signatureHeight - margin;
               
@@ -266,22 +266,25 @@ const CargoManagerDashboard = () => {
               
               // Nome trasportatore sotto la firma
               if (doc.signature.transporterName) {
-                pdf.setFontSize(8);
+                pdf.setFontSize(7);
                 pdf.setTextColor(0, 0, 0);
                 const textWidth = pdf.getTextWidth(doc.signature.transporterName);
                 const textX = signatureX + (signatureWidth - textWidth) / 2;
-                pdf.text(doc.signature.transporterName, textX, signatureY + signatureHeight + 4);
+                pdf.text(doc.signature.transporterName, textX, signatureY + signatureHeight + 3);
               }
             }
             
-            // Aggiungi sigillo sulla prima pagina (margine sinistro, stessa altezza della firma)
+            // Aggiungi sigillo sulla prima pagina (margine sinistro, 10mm più in alto della firma)
             if (i === 0 && doc.signature?.seal) {
               const pageHeight = 297; // A4 height in mm
               const margin = 10;
-              const signatureHeight = 25;
-              const sealY = pageHeight - signatureHeight - margin;
+              const signatureHeight = 20; // Altezza firma aggiornata
+              const sealOffsetUp = 10; // 10mm più in alto della firma
               
-              pdf.setFontSize(9);
+              // Posizione Y del sigillo: 10mm più in alto della firma
+              const sealY = pageHeight - signatureHeight - margin - sealOffsetUp;
+              
+              pdf.setFontSize(8);
               pdf.setTextColor(0, 0, 0);
               pdf.setFont(undefined, 'bold');
               
@@ -290,12 +293,13 @@ const CargoManagerDashboard = () => {
               // Nome trasportatore per sigillo
               if (doc.signature.seal.transporterName) {
                 pdf.text(doc.signature.seal.transporterName, margin, currentY);
-                currentY += 5;
+                currentY += 4; // Spaziatura ridotta
               }
               
               // Numero sigillo
               if (doc.signature.seal.number) {
                 pdf.setFont(undefined, 'normal');
+                pdf.setFontSize(7);
                 pdf.text(`Sigillo: ${doc.signature.seal.number}`, margin, currentY);
               }
             }
