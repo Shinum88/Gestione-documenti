@@ -128,13 +128,32 @@ const CameraScanner = () => {
 
   /**
    * Conclude la scansione e mostra anteprima di tutte le pagine
+   * Accetta opzionalmente l'ultima pagina da aggiungere prima di mostrare l'anteprima
    */
-  const concludeAndShowPreview = () => {
-    if (processedPages.length === 0) {
-      toast.error('Nessuna pagina elaborata');
-      return;
+  const concludeAndShowPreview = (finalPageImage = null) => {
+    console.log('🏁 concludeAndShowPreview chiamato', {
+      currentPagesCount: processedPages.length,
+      hasFinalPage: !!finalPageImage
+    });
+    
+    // Se viene passata l'ultima pagina, aggiungila prima di mostrare l'anteprima
+    if (finalPageImage) {
+      setProcessedPages(prev => {
+        const updated = [...prev, finalPageImage];
+        console.log(`✅ Aggiunta ultima pagina. Totale: ${updated.length}`);
+        return updated;
+      });
     }
+    
+    // Chiudi il DocumentScanner se è aperto
+    setShowDocumentScanner(false);
+    setCurrentPhoto(null);
+    
+    // Mostra l'anteprima
     setShowPreview(true);
+    
+    const totalPages = processedPages.length + (finalPageImage ? 1 : 0);
+    console.log(`📄 Mostrando anteprima con ${totalPages} pagine`);
   };
 
   /**
