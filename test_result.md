@@ -190,8 +190,10 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Workflow completo Operatore con DocumentScanner"
+  stuck_tasks:
+    - "Workflow completo Operatore con DocumentScanner"
   test_all: false
   test_priority: "high_first"
 
