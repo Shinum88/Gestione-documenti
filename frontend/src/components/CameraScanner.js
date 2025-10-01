@@ -190,6 +190,69 @@ const CameraScanner = () => {
     return <div>Caricamento...</div>;
   }
 
+  // Mostra anteprima finale di tutte le pagine elaborate
+  if (showPreview) {
+    return (
+      <div className="scanner-container">
+        <div className="scanner-header">
+          <button className="back-btn" onClick={cancelPreview}>
+            ← Indietro
+          </button>
+          <h1 className="scanner-title">
+            Anteprima Documento ({processedPages.length} pagine)
+          </h1>
+          <div style={{ width: '80px' }}></div>
+        </div>
+
+        <div style={{ 
+          padding: '2rem', 
+          overflowY: 'auto', 
+          maxHeight: 'calc(100vh - 200px)',
+          background: '#f8f9fa'
+        }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '1rem',
+            marginBottom: '2rem'
+          }}>
+            {processedPages.map((page, index) => (
+              <div key={index} style={{
+                background: 'white',
+                padding: '1rem',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}>
+                <h3 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>
+                  Pagina {index + 1}
+                </h3>
+                <img 
+                  src={page} 
+                  alt={`Pagina ${index + 1}`}
+                  style={{ 
+                    width: '100%', 
+                    height: 'auto',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '4px'
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="scanner-controls">
+          <button className="btn-scanner btn-success" onClick={confirmAndSave}>
+            ✅ Conferma e Salva Documento
+          </button>
+          <button className="btn-scanner btn-secondary" onClick={cancelPreview}>
+            🔄 Aggiungi Altre Pagine
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="scanner-container">
       <div className="scanner-header">
@@ -235,11 +298,7 @@ const CameraScanner = () => {
             </>
           )}
         </div>
-      ) : (
-        <div className="preview-container">
-          <img src={preview} alt="Preview" className="preview-image" />
-        </div>
-      )}
+      ) : null}
 
       <div className="scanner-controls">
         {isScanning ? (
@@ -260,40 +319,28 @@ const CameraScanner = () => {
             >
               📁 Carica File
             </button>
+            
+            {processedPages.length > 0 && (
+              <button 
+                className="btn-scanner btn-success"
+                onClick={concludeAndShowPreview}
+              >
+                ✅ Concludi ({processedPages.length} pagine)
+              </button>
+            )}
           </>
-        ) : (
-          <>
-            <button className="btn-scanner btn-success" onClick={concludeScanning}>
-              📄 Elabora e Invia
-            </button>
-            <button className="btn-scanner btn-secondary" onClick={addPageToDocument}>
-              + Pagina Successiva
-            </button>
-            <button className="btn-scanner btn-secondary" onClick={startNewDocument}>
-              📄 Nuovo Documento
-            </button>
-            <button 
-              className="btn-scanner btn-secondary" 
-              onClick={() => {
-                setPreview(null);
-                setIsScanning(true);
-              }}
-            >
-              🔄 Riscansiona
-            </button>
-          </>
-        )}
+        ) : null}
         
         <div style={{ width: '100%', textAlign: 'center', color: 'white', fontSize: '0.9rem' }}>
-          Pagine documento corrente: {currentDocument.pages.length + (preview ? 1 : 0)}
+          Pagine elaborate: {processedPages.length}
         </div>
       </div>
 
-      {/* Document Scanner Modal */}
-      {showDocumentScanner && preview && (
+      {/* Document Scanner Modal - Appare SUBITO dopo ogni foto */}
+      {showDocumentScanner && currentPhoto && (
         <DocumentScanner
-          imageData={preview}
-          onProcessed={handleDocumentProcessed}
+          imageData={currentPhoto}
+          onProcessed={handlePageProcessed}
           onCancel={handleDocumentScannerCancel}
         />
       )}
