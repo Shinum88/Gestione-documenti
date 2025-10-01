@@ -534,13 +534,11 @@ const CargoManagerDashboard = () => {
         )}
       </div>
       
-      {/* Processore documenti A4 */}
-      {showDocumentProcessor && (
-        <DocumentSignatureManager
-          documents={documents.filter(doc => selectedDocuments.has(doc._id))}
-          transporters={transporters}
-          onDocumentsProcessed={handleDocumentsProcessed}
-          onClose={() => setShowDocumentProcessor(false)}
+      {/* Canvas firma semplice */}
+      {showSignatureCanvas && (
+        <SignatureCanvas
+          onSave={handleSignatureSave}
+          onCancel={() => setShowSignatureCanvas(false)}
         />
       )}
       
