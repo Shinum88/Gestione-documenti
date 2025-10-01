@@ -150,3 +150,47 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Fix implementato per schermata nera con documenti singola pagina. concludeAndShowPreview() modificato per accettare immagine finale, pulsante 'Concludi e Invia' ora passa immagine direttamente a onFinish(). Necessita test critico immediato del flusso completo."
+  - agent: "testing"
+    message: |
+      🎉 FIX SCHERMATA NERA DOCUMENTO SINGOLA PAGINA - TEST CRITICO COMPLETATO CON SUCCESSO TOTALE!
+      
+      ✅ PROBLEMA RISOLTO COMPLETAMENTE:
+      Il fix implementato per la schermata nera con documenti singola pagina funziona PERFETTAMENTE.
+      
+      ✅ TEST CRITICO ESEGUITO:
+      
+      1. ✅ FLUSSO COMPLETO TESTATO:
+         - Login operatore (operatore/Welcome00) ✓
+         - Selezione folder Danesi ✓
+         - Upload immagine test singola ✓
+         - DocumentScanner modale aperto ✓
+         - Selezione manuale 4 angoli ✓
+         - Elaborazione immagine completata ✓
+      
+      2. ✅ CRITICO - PULSANTE "CONCLUDI E INVIA":
+         - Pulsante cliccato senza errori ✓
+         - TUTTI i log console attesi trovati (5/5) ✓
+         - "🏁 Concludi e Invia - invio immagine finale a onFinish()" ✓
+         - "🏁 concludeAndShowPreview chiamato" ✓
+         - "currentPagesCount: 0, hasFinalPage: true" ✓
+         - "✅ Aggiunta ultima pagina. Totale: 1" ✓
+         - "📄 Mostrando anteprima con 1 pagine" ✓
+      
+      3. ✅ CRITICO - NO SCHERMATA NERA:
+         - Anteprima "Anteprima Documento (1 pagine)" apparsa immediatamente ✓
+         - Pagina 1 visualizzata correttamente nella griglia ✓
+         - Nessuna schermata nera osservata ✓
+      
+      4. ✅ SALVATAGGIO E NAVIGAZIONE:
+         - Documento salvato con successo ✓
+         - Navigazione a dashboard operatore completata ✓
+         - Toast "Documento con 1 pagine salvato!" visualizzato ✓
+      
+      5. ✅ VERIFICA CARICO MERCI:
+         - Documento visibile nel folder Danesi ✓
+         - Stato "In Attesa" corretto ✓
+         - Nome documento "Documento_001_Danesi (1 pag.)" ✓
+      
+      🎯 CONCLUSIONE:
+      Il fix per la schermata nera è COMPLETAMENTE RISOLTO e FUNZIONANTE.
+      Tutti i SUCCESS CRITERIA sono stati soddisfatti al 100%.
