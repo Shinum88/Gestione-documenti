@@ -261,7 +261,7 @@ const CameraScanner = () => {
         ) : (
           <>
             <button className="btn-scanner btn-success" onClick={concludeScanning}>
-              ✓ Concludi Scansione
+              📄 Elabora e Invia
             </button>
             <button className="btn-scanner btn-secondary" onClick={addPageToDocument}>
               + Pagina Successiva
@@ -285,6 +285,15 @@ const CameraScanner = () => {
           Pagine documento corrente: {currentDocument.pages.length + (preview ? 1 : 0)}
         </div>
       </div>
+
+      {/* Document Scanner Modal */}
+      {showDocumentScanner && preview && (
+        <DocumentScanner
+          imageData={preview}
+          onProcessed={handleDocumentProcessed}
+          onCancel={handleDocumentScannerCancel}
+        />
+      )}
     </div>
   );
 };
