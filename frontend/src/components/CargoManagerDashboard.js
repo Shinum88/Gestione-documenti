@@ -114,8 +114,71 @@ const CargoManagerDashboard = () => {
       return;
     }
 
-    // Apri il processore documenti A4 automatico
-    setShowDocumentProcessor(true);
+    // Mostra canvas per firma semplice
+    setShowSignatureCanvas(true);
+  };
+
+  const handleSignatureSave = (signatureData) => {
+    setSelectedSignature(signatureData);
+    setShowSignatureCanvas(false);
+    
+    // Applica la stessa firma a tutti i documenti selezionati
+    applySignatureToSelectedDocuments(signatureData);
+  };
+
+  const applySignatureToSelectedDocuments = async (signatureData) => {
+    setLoading(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const updatedDocuments = documents.map(doc => {
+        if (selectedDocuments.has(doc._id)) {
+          return { 
+            ...doc, 
+            signed: true,
+            signature: { image: signatureData },
+            signedAt: new Date().toISOString()
+          };
+        }
+        return doc;
+      });
+      
+      setDocuments(updatedDocuments);
+      
+      // Aggiorna stato cartelle
+      const folderIds = [...selectedDocuments].map(docId => {
+        const doc = documents.find(d => d._id === docId);
+        return doc?.folderId;
+      }).filter(Boolean);
+      
+      const uniqueFolderIds = [...new Set(folderIds)];
+      
+      const updatedFolders = folders.map(folder => {
+        if (uniqueFolderIds.includes(folder._id)) {
+          const folderDocs = getDocumentsForFolder(folder._id);
+          const allSigned = folderDocs.every(doc => 
+            selectedDocuments.has(doc._id) || doc.signed
+          );
+          
+          if (allSigned) {
+            return { ...folder, status: 'signed' };
+          }
+        }
+        return folder;
+      });
+      
+      setFolders(updatedFolders);
+      setSelectedDocuments(new Set());
+      
+      toast.success(`Firma applicata a ${selectedDocuments.size} documenti`);
+      
+    } catch (error) {
+      console.error('Errore applicazione firma:', error);
+      toast.error('Errore durante l\'applicazione della firma');
+    }
+    
+    setLoading(false);
   };
 
   const handleDocumentsProcessed = (processedDocs) => {
