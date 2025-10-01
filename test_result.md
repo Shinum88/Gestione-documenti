@@ -137,11 +137,11 @@ frontend:
 
   - task: "Refactoring DocumentScanner per usare OpenCV Context"
     implemented: true
-    working: true
+    working: "NA"
     file: "src/components/DocumentScanner.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
@@ -149,6 +149,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ TESTATO CON SUCCESSO: DocumentScanner funziona perfettamente con OpenCV Context. Test completo eseguito: caricamento immagine → rilevamento automatico bordi → correzione prospettica → visualizzazione side-by-side → conferma. Log confermano: '✅ Bordi rilevati automaticamente' e '✅ Immagine elaborata visualizzata nel canvas'. Nessun BindingError rilevato."
+      - working: "NA"
+        agent: "main"
+        comment: "MIGLIORAMENTI RICHIESTI DA UTENTE: 1) Rilevamento automatico seleziona tabella interna invece di bordi esterni foglio. 2) Scritte troppo scure e segmentate. IMPLEMENTATI: detectDocumentCorners migliorato con RETR_EXTERNAL, soglia area 50%, controllo vicinanza bordi. applyDocumentFilters migliorato con parametri soglia adattiva più delicati (blockSize 21, C 4), sharpening moderato, riduzione rumore. Necessita test con documento reale."
 
   - task: "Workflow completo Operatore con DocumentScanner"
     implemented: true
