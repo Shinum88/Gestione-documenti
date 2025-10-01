@@ -293,6 +293,7 @@ const DocumentScanner = ({
 
   /**
    * Applica filtri tipici da scanner
+   * MIGLIORATO: preserva leggibilità testo stampato, evita segmentazione
    */
   const applyDocumentFilters = (src) => {
     try {
@@ -300,38 +301,73 @@ const DocumentScanner = ({
       const gray = new opencv.Mat();
       opencv.cvtColor(src, gray, opencv.COLOR_RGBA2GRAY);
 
-      // 2. Applica filtro bilaterale per mantenere i bordi nitidi
-      const bilateral = new opencv.Mat();
-      opencv.bilateralFilter(gray, bilateral, 9, 75, 75);
+      // 2. Aumenta leggermente il contrasto senza esagerare
+      const enhanced = new opencv.Mat();
+      const alpha = 1.3; // Contrasto moderato (non 2.0)
+      const beta = 10;   // Luminosità leggermente aumentata
+      opencv.convertScaleAbs(gray, enhanced, alpha, beta);
 
-      // 3. Soglia adattiva per ottenere bianco/nero pulito
+      // 3. Riduci rumore mantenendo dettagli del testo
+      const denoised = new opencv.Mat();
+      opencv.fastNlMeansDenoising(enhanced, denoised, 10, 7, 21);
+
+      // 4. Sharpening delicato per migliorare nitidezza
+      const kernel = opencv.matFromArray(3, 3, opencv.CV_32F, [
+        0, -1, 0,
+        -1, 5, -1,
+        0, -1, 0
+      ]);
+      const sharpened = new opencv.Mat();
+      opencv.filter2D(denoised, sharpened, -1, kernel);
+
+      // 5. Soglia adattiva DELICATA (parametri meno aggressivi)
       const adaptive = new opencv.Mat();
       opencv.adaptiveThreshold(
-        bilateral,
+        sharpened,
         adaptive,
         255,
         opencv.ADAPTIVE_THRESH_GAUSSIAN_C,
         opencv.THRESH_BINARY,
-        11,
-        2
+        21,  // blockSize più grande (era 11) -> aree più ampie
+        4    // C più basso (era 2) -> meno aggressivo
       );
 
-      // 4. Operazioni morfologiche per pulire il risultato
-      const kernel = opencv.getStructuringElement(opencv.MORPH_RECT, new opencv.Size(2, 2));
+      // 6. Operazione morfologica MINIMALE per collegare testo spezzato
+      const morphKernel = opencv.getStructuringElement(opencv.MORPH_RECT, new opencv.Size(1, 1));
       const morphed = new opencv.Mat();
-      opencv.morphologyEx(adaptive, morphed, opencv.MORPH_CLOSE, kernel);
+      opencv.morphologyEx(adaptive, morphed, opencv.MORPH_CLOSE, morphKernel);
 
       // Cleanup
       gray.delete();
-      bilateral.delete();
-      adaptive.delete();
+      enhanced.delete();
+      denoised.delete();
       kernel.delete();
+      sharpened.delete();
+      adaptive.delete();
+      morphKernel.delete();
 
+      console.log('✅ Filtri scanner applicati con leggibilità migliorata');
       return morphed;
 
     } catch (error) {
-      console.error('Errore filtri documento:', error);
-      return src; // Restituisci originale se i filtri falliscono
+      console.error('❌ Errore filtri documento:', error);
+      // Fallback: restituisci solo scala di grigi con sharpening
+      try {
+        const gray = new opencv.Mat();
+        opencv.cvtColor(src, gray, opencv.COLOR_RGBA2GRAY);
+        const kernel = opencv.matFromArray(3, 3, opencv.CV_32F, [
+          0, -1, 0,
+          -1, 5, -1,
+          0, -1, 0
+        ]);
+        const sharpened = new opencv.Mat();
+        opencv.filter2D(gray, sharpened, -1, kernel);
+        gray.delete();
+        kernel.delete();
+        return sharpened;
+      } catch {
+        return src; // Ultima risorsa: restituisci originale
+      }
     }
   };
 
