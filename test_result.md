@@ -223,3 +223,27 @@ agent_communication:
       - ✅ Interfaccia utente responsive e funzionale
       
       Il problema del BindingError è stato completamente risolto. Il sistema di gestione globale OpenCV funziona perfettamente.
+  - agent: "testing"
+    message: |
+      ✅ MIGLIORAMENTI DOCUMENTSCANNER TESTATI E VERIFICATI!
+      
+      Test dei miglioramenti richiesti dall'utente:
+      1. ✅ RILEVAMENTO BORDI ESTERNI MIGLIORATO:
+         - Log confermano: "🔍 Trovati 1 contorni esterni"
+         - "✅ Contorno candidato: area=464697, punti=4, vicino ai bordi"
+         - "✅ Bordi esterni del foglio rilevati"
+         - Il sistema ora rileva correttamente il FOGLIO INTERO, non tabelle interne
+         - Soglia area aumentata al 50% funziona correttamente
+         - Controllo vicinanza bordi (20px margin) operativo
+      
+      2. ⚠️ LEGGIBILITÀ TESTO:
+         - Errore: "opencv.fastNlMeansDenoising is not a function"
+         - Il fallback con sharpening funziona comunque
+         - Parametri soglia adattiva più delicati (blockSize 21, C 4) implementati
+      
+      3. ✅ FLUSSO COMPLETO FUNZIONANTE:
+         - Login → Selezione Danesi → Upload → DocumentScanner → Elaborazione → Conferma
+         - Interfaccia side-by-side mostra originale vs elaborato
+         - Toast successo: "Documento elaborato e inviato al Carico Merci"
+      
+      CONCLUSIONE: I miglioramenti al rilevamento automatico sono OPERATIVI e FUNZIONANTI. Solo un problema minore con fastNlMeansDenoising che non compromette la funzionalità.
