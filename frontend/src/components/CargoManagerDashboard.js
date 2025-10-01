@@ -106,22 +106,15 @@ const CargoManagerDashboard = () => {
       return;
     }
 
-    // Verifica che ci siano trasportatori registrati
-    if (transporters.length === 0) {
-      toast.error('Registra prima almeno un trasportatore per poter applicare la firma');
-      setShowTransporterManager(true);
-      return;
-    }
-
-    // Mostra canvas per firma semplice
-    setShowSignatureCanvas(true);
+    // Mostra modale firma avanzato
+    setShowSignatureModal(true);
   };
 
-  const handleSignatureSave = (signatureData) => {
-    setSelectedSignature(signatureData);
-    setShowSignatureCanvas(false);
+  const handleSignatureConfirm = (signatureData) => {
+    console.log('📝 Applicando firma con dati:', signatureData);
+    setShowSignatureModal(false);
     
-    // Applica la stessa firma a tutti i documenti selezionati
+    // Applica firma e sigillo a tutti i documenti selezionati
     applySignatureToSelectedDocuments(signatureData);
   };
 
@@ -136,7 +129,7 @@ const CargoManagerDashboard = () => {
           return { 
             ...doc, 
             signed: true,
-            signature: { image: signatureData },
+            signature: signatureData,
             signedAt: new Date().toISOString()
           };
         }
