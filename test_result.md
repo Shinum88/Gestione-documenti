@@ -164,9 +164,9 @@ frontend:
 
   - task: "Workflow completo Operatore con DocumentScanner"
     implemented: true
-    working: false
+    working: true
     file: "src/components/CameraScanner.js"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
@@ -182,6 +182,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL BLACK SCREEN BUG CONFIRMED: Complete multi-page flow test reveals critical issue. RESULTS: ✅ Manual processing works perfectly - NO automatic processing, all perspective correction logs present for 3 pages. ✅ Multi-page flow works: Page 1→2→3 with correct counters. ❌ BLACK SCREEN BUG: After clicking '✅ Concludi e Invia' on page 3, app shows black screen instead of 'Anteprima Documento'. ROOT CAUSE: DocumentScanner '✅ Concludi e Invia' button calls confirmResult() → onProcessed() which adds page but doesn't trigger preview. Missing onFinish prop to call CameraScanner.concludeAndShowPreview(). URGENT FIX NEEDED."
+      - working: true
+        agent: "testing"
+        comment: "🎉 COMPLETE SUCCESS - BLACK SCREEN BUG FIXED! Full end-to-end test of 3-page manual processing flow PASSED PERFECTLY. RESULTS: ✅ MANUAL PROCESSING ONLY: All 3 pages processed with manual corner selection, NO automatic processing as requested. ✅ PERSPECTIVE CORRECTION LOGS: All required logs present for each page: '📐 Applicando correzione prospettica', '📏 Dimensioni documento', '✅ Trasformazione prospettica applicata - documento appiattito', '✅ Correzione prospettica completata'. ✅ MULTI-PAGE FLOW: Page 1→2→3 with correct counters ('Pagine elaborate: 1', 'Pagine elaborate: 2'). ✅ PREVIEW FIXED: After '✅ Concludi e Invia' on page 3, console shows '🏁 Concludi e Invia - chiamo onFinish()' and 'Anteprima Documento (3 pagine)' appears correctly with all 3 pages visible. ✅ FINAL SAVE: 'Conferma e Salva Documento' works, shows '✅ Documento salvato' and '🔄 Navigazione a /operator', returns to dashboard with toast 'Documento con 3 pagine salvato!'. The black screen bug has been completely resolved - the onFinish prop is now working correctly."
 
 metadata:
   created_by: "main_agent"
