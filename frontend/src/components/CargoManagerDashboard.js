@@ -250,57 +250,52 @@ const CargoManagerDashboard = () => {
             const imgHeight = 270;
             pdf.addImage(doc.pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
             
-            // Aggiungi firma sulla prima pagina (margine destro, in basso)
+            // Parametri posizionamento firma e sigillo
             if (i === 0 && doc.signature?.image) {
-              const signatureWidth = 30;  // Ridotto da 50mm a 30mm
-              const signatureHeight = 20; // Ridotto da 25mm a 20mm
+              const signatureWidth = 30;
+              const signatureHeight = 20;
               const pageWidth = 210; // A4 width in mm
               const pageHeight = 297; // A4 height in mm
               const margin = 10;
+              const sealOffsetUp = 20; // 20mm più in alto rispetto al fondo
               
-              // Firma a destra, in basso
-              const signatureX = pageWidth - signatureWidth - margin;
-              const signatureY = pageHeight - signatureHeight - margin;
+              // Calcola posizione Y (stessa per firma e sigillo)
+              const elementY = pageHeight - signatureHeight - margin - sealOffsetUp;
+              
+              // 1. SIGILLO (se presente) - Margine sinistro
+              if (doc.signature.seal) {
+                pdf.setFontSize(9);
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFont(undefined, 'bold'); // Grassetto
+                
+                let currentY = elementY;
+                
+                // Nome trasportatore per sigillo (grassetto)
+                if (doc.signature.seal.transporterName) {
+                  pdf.text(doc.signature.seal.transporterName, margin, currentY);
+                  currentY += 5;
+                }
+                
+                // Numero sigillo (grassetto)
+                if (doc.signature.seal.number) {
+                  pdf.text(`Sigillo: ${doc.signature.seal.number}`, margin, currentY);
+                }
+              }
+              
+              // 2. FIRMA - Centro orizzontale, stessa altezza del sigillo
+              const signatureX = (pageWidth - signatureWidth) / 2; // Centro orizzontale
+              const signatureY = elementY;
               
               pdf.addImage(doc.signature.image, 'PNG', signatureX, signatureY, signatureWidth, signatureHeight);
               
-              // Nome trasportatore sotto la firma
+              // Nome trasportatore sotto la firma (centro)
               if (doc.signature.transporterName) {
                 pdf.setFontSize(7);
                 pdf.setTextColor(0, 0, 0);
+                pdf.setFont(undefined, 'normal');
                 const textWidth = pdf.getTextWidth(doc.signature.transporterName);
                 const textX = signatureX + (signatureWidth - textWidth) / 2;
                 pdf.text(doc.signature.transporterName, textX, signatureY + signatureHeight + 3);
-              }
-            }
-            
-            // Aggiungi sigillo sulla prima pagina (margine sinistro, 10mm più in alto della firma)
-            if (i === 0 && doc.signature?.seal) {
-              const pageHeight = 297; // A4 height in mm
-              const margin = 10;
-              const signatureHeight = 20; // Altezza firma aggiornata
-              const sealOffsetUp = 10; // 10mm più in alto della firma
-              
-              // Posizione Y del sigillo: 10mm più in alto della firma
-              const sealY = pageHeight - signatureHeight - margin - sealOffsetUp;
-              
-              pdf.setFontSize(8);
-              pdf.setTextColor(0, 0, 0);
-              pdf.setFont(undefined, 'bold');
-              
-              let currentY = sealY;
-              
-              // Nome trasportatore per sigillo
-              if (doc.signature.seal.transporterName) {
-                pdf.text(doc.signature.seal.transporterName, margin, currentY);
-                currentY += 4; // Spaziatura ridotta
-              }
-              
-              // Numero sigillo
-              if (doc.signature.seal.number) {
-                pdf.setFont(undefined, 'normal');
-                pdf.setFontSize(7);
-                pdf.text(`Sigillo: ${doc.signature.seal.number}`, margin, currentY);
               }
             }
           }
