@@ -142,15 +142,18 @@ frontend:
 
   - task: "Firma manuale - SignatureCanvas"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/SignatureCanvas.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Canvas per firma manuale implementato con supporto mouse e touch, funzioni cancella e salva. Necessita test di funzionalità disegno e salvataggio."
+      - working: true
+        agent: "testing"
+        comment: "✅ SIGNATURECANVAS PERFETTAMENTE FUNZIONANTE! Test completo: 1) ✅ CANVAS APRE CORRETTAMENTE: Modale 'Inserisci la tua firma' con istruzioni chiare. 2) ✅ DISEGNO FUNZIONA: Mouse drawing operativo, linee fluide, supporto touch. 3) ✅ SALVATAGGIO CORRETTO: Pulsante 'Salva Firma' funziona, genera base64 image data. 4) ✅ RITORNO AL MODALE: Dopo salvataggio torna al modale principale con anteprima firma. 5) ✅ ANTEPRIMA VISIBILE: Immagine firma manuale mostrata correttamente con pulsante 'Ridisegna Firma'. Il canvas è COMPLETAMENTE OPERATIVO."
 
   - task: "Download ZIP con firma e sigillo"
     implemented: true
