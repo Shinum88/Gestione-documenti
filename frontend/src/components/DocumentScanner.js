@@ -618,11 +618,25 @@ const DocumentScanner = ({
                       <button 
                         className="btn-save" 
                         onClick={() => {
-                          // Salva l'ultima pagina e mostra anteprima
-                          confirmResult();
-                          if (onFinish) {
-                            console.log('🏁 Concludi e Invia - chiamo onFinish()');
-                            onFinish();
+                          // Per "Concludi e Invia": prepara l'immagine e passala a onFinish
+                          if (!processedImage) {
+                            toast.error('Nessuna immagine elaborata disponibile');
+                            return;
+                          }
+                          
+                          try {
+                            const canvas = canvasRef.current;
+                            const processedImageData = canvas.toDataURL('image/jpeg', 0.9);
+                            
+                            console.log('🏁 Concludi e Invia - invio immagine finale a onFinish()');
+                            
+                            if (onFinish) {
+                              // Passa l'immagine finale a onFinish che mostrerà l'anteprima
+                              onFinish(processedImageData);
+                            }
+                          } catch (error) {
+                            console.error('❌ Errore preparazione immagine finale:', error);
+                            toast.error('Errore durante la preparazione');
                           }
                         }}
                       >
