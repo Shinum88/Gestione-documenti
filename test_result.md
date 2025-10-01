@@ -244,3 +244,5 @@ agent_communication:
       🎯 CONCLUSIONE:
       Il fix per la schermata nera è COMPLETAMENTE RISOLTO e FUNZIONANTE.
       Tutti i SUCCESS CRITERIA sono stati soddisfatti al 100%.
+  - agent: "main"
+    message: "Implementate 4 nuove funzionalità critiche: 1) Documenti operatore in tab 'In Attesa', 2) Dimensioni firma uniformi 30mm x 20mm, 3) Sigillo 10mm più in alto della firma, 4) Descrizione con formato arancione per sigillo. Necessita test completo del flusso operatore → firma → download PDF per verifica di tutte le implementazioni."
