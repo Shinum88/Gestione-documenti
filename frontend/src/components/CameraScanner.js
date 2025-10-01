@@ -19,8 +19,10 @@ const CameraScanner = () => {
   } = useAppContext();
 
   const [isScanning, setIsScanning] = useState(true);
-  const [preview, setPreview] = useState(null);
+  const [currentPhoto, setCurrentPhoto] = useState(null); // Foto corrente da elaborare
+  const [processedPages, setProcessedPages] = useState([]); // Pagine già elaborate
   const [showDocumentScanner, setShowDocumentScanner] = useState(false);
+  const [showPreview, setShowPreview] = useState(false); // Anteprima finale
   const [cameraError, setCameraError] = useState(false);
 
   useEffect(() => {
