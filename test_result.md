@@ -145,53 +145,5 @@ test_plan:
   test_priority: "high_first"
 
 agent_communication:
-  - agent: "testing"
-    message: |
-      🎉 SISTEMA FIRMA AVANZATO - TEST COMPLETATO CON SUCCESSO PARZIALE
-      
-      ✅ FUNZIONALITÀ TESTATE E FUNZIONANTI:
-      
-      1. ✅ SIGNATUREMODAL COMPLETAMENTE OPERATIVO:
-         - Modale si apre con titolo "Applica Firma Unica"
-         - Radio buttons "Trasportatore Registrato" e "Firma Manuale" funzionanti
-         - Sezione sigillo con background giallo e testo corretto
-         - Campi sigillo opzionali (Nome Trasportatore, N° Sigillo)
-         - Pulsante "✅ Applica Firma a Documenti Selezionati"
-      
-      2. ✅ FIRMA MANUALE PERFETTA:
-         - Canvas "Inserisci la tua firma" si apre correttamente
-         - Disegno con mouse funziona perfettamente
-         - Salvataggio genera base64 image data
-         - Anteprima firma manuale visibile nel modale principale
-         - Pulsante "🔄 Ridisegna Firma" disponibile
-      
-      3. ✅ SIGILLO OPZIONALE CONFERMATO:
-         - Sistema permette completamento senza compilare campi sigillo
-         - Console logs mostrano firma applicata senza seal object
-         - Documenti firmati senza sigillo funzionano correttamente
-      
-      4. ✅ CONSOLE LOGS PERFETTI:
-         - "✅ Firma configurata: {type: manual, image: data:image/png...}"
-         - "📝 Applicando firma con dati: {type: manual, image: data:image/png...}"
-         - Struttura dati firma corretta
-      
-      5. ✅ FEEDBACK UTENTE:
-         - Toast "Firma applicata a 1 documenti" visibile
-         - Toast "Firma manuale salvata" durante processo
-         - Indicatori "✓ Firmato" sui documenti
-      
-      ⚠️ PROBLEMI IDENTIFICATI:
-      
-      1. ⚠️ TRASPORTATORI REGISTRATI:
-         - Dropdown mostra solo "-- Seleziona trasportatore --"
-         - Nessuna opzione valida disponibile
-         - Possibile problema sincronizzazione localStorage
-      
-      2. ⚠️ PERSISTENZA DOCUMENTI FIRMATI:
-         - Dopo firma, switch a tab "Firmati" mostra 0 documenti
-         - Documenti firmati non persistono tra sessioni
-         - ZIP download non testabile senza documenti firmati persistenti
-      
-      🎯 CONCLUSIONE:
-      Il sistema di firma avanzato è FUNZIONANTE per firma manuale e sigillo opzionale.
-      Necessita fix per trasportatori registrati e persistenza documenti.
+  - agent: "main"
+    message: "Fix implementato per schermata nera con documenti singola pagina. concludeAndShowPreview() modificato per accettare immagine finale, pulsante 'Concludi e Invia' ora passa immagine direttamente a onFinish(). Necessita test critico immediato del flusso completo."
