@@ -200,11 +200,7 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "Documenti operatore in tab In Attesa"
-    - "Dimensioni firma uniformi 30mm x 20mm"
-    - "Sigillo posizionato 10mm più in alto della firma"
-    - "Descrizione firma con sigillo formato arancione"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
