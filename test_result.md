@@ -172,9 +172,7 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "Workflow completo Operatore con DocumentScanner"
-    - "Refactoring DocumentScanner per usare OpenCV Context"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -193,3 +191,29 @@ agent_communication:
       - ✅ Nessun errore di binding
       
       Necessario test end-to-end del flusso: Login Operatore → Selezione terzista → Cattura foto → DocumentScanner (rilevamento automatico bordi + correzione prospettica) → Salvataggio.
+  - agent: "testing"
+    message: |
+      ✅ TEST COMPLETO SUPERATO CON SUCCESSO!
+      
+      Flusso testato end-to-end:
+      1. ✅ Login Operatore (operatore/Welcome00)
+      2. ✅ Selezione terzista "Danesi" 
+      3. ✅ Caricamento immagine test tramite "📁 Carica File"
+      4. ✅ Preview immagine visualizzata correttamente
+      5. ✅ Apertura DocumentScanner con "📄 Elabora e Invia"
+      6. ✅ OpenCV caricamento: "🔄 Caricamento OpenCV" → "✅ OpenCV runtime completamente inizializzato"
+      7. ✅ Rilevamento automatico bordi: "🔄 Iniziando rilevamento automatico bordi..." → "✅ Bordi rilevati automaticamente"
+      8. ✅ Elaborazione immagine: "✅ Immagine elaborata visualizzata nel canvas"
+      9. ✅ Visualizzazione side-by-side: originale + elaborata
+      10. ✅ Conferma e salvataggio: "✅ Conferma e Invia" → ritorno dashboard
+      11. ✅ Toast successo: "Documento elaborato e inviato al Carico Merci"
+      
+      RISULTATI CHIAVE:
+      - ❌ NESSUN BindingError rilevato nei log
+      - ✅ OpenCV si carica correttamente senza conflitti
+      - ✅ Rilevamento automatico bordi funziona
+      - ✅ Correzione prospettica applicata
+      - ✅ Filtri scanner applicati (scala grigi, soglia adattiva, morfologia)
+      - ✅ Interfaccia utente responsive e funzionale
+      
+      Il problema del BindingError è stato completamente risolto. Il sistema di gestione globale OpenCV funziona perfettamente.
