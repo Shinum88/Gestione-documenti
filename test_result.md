@@ -169,15 +169,18 @@ frontend:
 
   - task: "Integrazione sistema firma in CargoManagerDashboard"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/CargoManagerDashboard.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Dashboard carico merci integrato con nuovo sistema firma: 1) Pulsante 'Applica Firma Unica', 2) Apertura SignatureModal, 3) Gestione dati firma e sigillo, 4) Aggiornamento stato documenti. Necessita test end-to-end completo."
+      - working: true
+        agent: "testing"
+        comment: "✅ INTEGRAZIONE DASHBOARD COMPLETAMENTE FUNZIONANTE! Test end-to-end: 1) ✅ SELEZIONE DOCUMENTI: Checkbox funzionano, action bar appare. 2) ✅ PULSANTE FIRMA: '✍️ Applica Firma Unica' visibile e cliccabile. 3) ✅ APERTURA MODALE: SignatureModal si apre correttamente. 4) ✅ APPLICAZIONE FIRMA: Console logs confermano dati firma processati. 5) ✅ AGGIORNAMENTO STATO: Documenti si spostano in tab 'Firmati' con indicatori '✓ Firmato'. 6) ✅ TOAST FEEDBACK: Messaggi di successo visibili. L'integrazione è PERFETTA."
 
 metadata:
   created_by: "main_agent"
