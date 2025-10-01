@@ -25,13 +25,11 @@ const CargoManagerDashboard = () => {
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'signed'
   const [loading, setLoading] = useState(false);
   
-  // Stato per gestione trasportatori e firma
+  // Stato per gestione trasportatori e firma semplificata
   const [showTransporterManager, setShowTransporterManager] = useState(false);
   const [transporters, setTransporters] = useState([]);
-  const [showSignatureOptions, setShowSignatureOptions] = useState(false);
-  const [showSealNumberDialog, setShowSealNumberDialog] = useState(false);
-  const [sealNumberData, setSealNumberData] = useState({ transporter: '', number: '' });
-  const [showDocumentProcessor, setShowDocumentProcessor] = useState(false);
+  const [showSignatureCanvas, setShowSignatureCanvas] = useState(false);
+  const [selectedSignature, setSelectedSignature] = useState(null);
 
   const terzisti = ['Danesi', 'Happening', 'Almax', 'Veliero', 'Gab', 'Kuoyo'];
 
