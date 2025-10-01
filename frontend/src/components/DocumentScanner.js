@@ -419,13 +419,29 @@ const DocumentScanner = ({
     img.src = imageData;
   };
 
-  if (isLoading) {
+  // Mostra loader se OpenCV non è ancora pronto
+  if (isOpenCVLoading) {
     return (
       <div className="signature-modal">
         <div className="signature-container" style={{ textAlign: 'center' }}>
           <h2 className="signature-title">🔄 Caricamento OpenCV</h2>
           <div className="loading-spinner" style={{ margin: '2rem auto' }}></div>
           <p>Caricamento libreria di elaborazione immagini...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostra errore se il caricamento è fallito
+  if (openCVError) {
+    return (
+      <div className="signature-modal">
+        <div className="signature-container" style={{ textAlign: 'center' }}>
+          <h2 className="signature-title">❌ Errore Caricamento</h2>
+          <p style={{ color: '#ef4444', marginTop: '1rem' }}>{openCVError}</p>
+          <button className="btn-secondary" onClick={onCancel} style={{ marginTop: '1rem' }}>
+            Chiudi
+          </button>
         </div>
       </div>
     );
