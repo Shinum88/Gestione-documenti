@@ -181,8 +181,10 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Refactoring DocumentScanner per usare OpenCV Context"
+  stuck_tasks:
+    - "Refactoring DocumentScanner per usare OpenCV Context"
   test_all: false
   test_priority: "high_first"
 
