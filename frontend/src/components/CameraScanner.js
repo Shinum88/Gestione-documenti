@@ -363,6 +363,7 @@ const CameraScanner = () => {
           onProcessed={handlePageProcessed}
           onCancel={handleDocumentScannerCancel}
           onNextPage={addNextPage}
+          onFinish={concludeAndShowPreview}
           showMultiPageOptions={true}
         />
       )}
