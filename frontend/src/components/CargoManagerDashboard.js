@@ -210,9 +210,8 @@ const CargoManagerDashboard = () => {
     
     setFolders(updatedFolders);
     setSelectedDocuments(new Set());
-    setShowDocumentProcessor(false);
     
-    toast.success(`${processedDocs.length} documenti processati con struttura A4`);
+    toast.success(`${processedDocs.length} documenti firmati con successo`);
   };
 
   const handleLoadMockData = () => {
