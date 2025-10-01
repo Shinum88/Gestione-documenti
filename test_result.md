@@ -139,11 +139,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Sistema firma avanzato - SignatureModal"
-    - "Gestione trasportatori - TransporterManager"
-    - "Firma manuale - SignatureCanvas"
-    - "Download ZIP con firma e sigillo"
-    - "Integrazione sistema firma in CargoManagerDashboard"
+    - "Fix schermata nera documento singola pagina"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
