@@ -216,21 +216,32 @@ const DocumentScanner = ({
   };
 
   /**
-   * Ordina i punti in senso orario partendo da top-left
+   * Ordina i punti nell'ordine: Top-Left, Top-Right, Bottom-Right, Bottom-Left
+   * Metodo robusto basato su somma e differenza coordinate
    */
   const orderPoints = (points) => {
-    // Calcola il centro
-    const centerX = points.reduce((sum, p) => sum + p.x, 0) / 4;
-    const centerY = points.reduce((sum, p) => sum + p.y, 0) / 4;
-
-    // Ordina in base all'angolo rispetto al centro
-    points.sort((a, b) => {
-      const angleA = Math.atan2(a.y - centerY, a.x - centerX);
-      const angleB = Math.atan2(b.y - centerY, b.x - centerX);
-      return angleA - angleB;
+    // Ordina per somma (x + y): il punto con somma minore è Top-Left
+    const sortedBySum = [...points].sort((a, b) => (a.x + a.y) - (b.x + b.y));
+    const topLeft = sortedBySum[0];
+    const bottomRight = sortedBySum[3];
+    
+    // Ordina per differenza (y - x): 
+    // Top-Right avrà differenza negativa (y piccolo, x grande)
+    // Bottom-Left avrà differenza positiva (y grande, x piccolo)
+    const sortedByDiff = [...points].sort((a, b) => (a.y - a.x) - (b.y - b.x));
+    const topRight = sortedByDiff[0];
+    const bottomLeft = sortedByDiff[3];
+    
+    const orderedPoints = [topLeft, topRight, bottomRight, bottomLeft];
+    
+    console.log('📍 Punti ordinati:', {
+      'Top-Left': topLeft,
+      'Top-Right': topRight,
+      'Bottom-Right': bottomRight,
+      'Bottom-Left': bottomLeft
     });
-
-    return points;
+    
+    return orderedPoints;
   };
 
   /**
