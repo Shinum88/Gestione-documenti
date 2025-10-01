@@ -174,58 +174,16 @@ const CameraScanner = () => {
     setIsScanning(true);
   };
 
-  const saveDocumentToDB = async (documentData) => {
-    try {
-      // Crea documento elaborato - pronto per la firma dal carico merci
-      const newDocument = {
-        _id: Date.now().toString(),
-        folderId: currentFolder._id,
-        name: `Documento_${Date.now()}`,
-        pages: documentData.pages.filter(Boolean),
-        signed: false,
-        signature: null,
-        sealNumber: null,
-        transporterName: null,
-        processedByOperator: true, // Flag per indicare elaborazione operatore
-        createdAt: new Date().toISOString()
-      };
-      
-      // Mock POST /api/documents
-      setDocuments(prev => [...prev, newDocument]);
-      
-      toast.success('Documento elaborato e inviato al Carico Merci');
-      
-      // Reset e torna alla selezione terzista
-      setCurrentDocument({ pages: [] });
-      setPreview(null);
-      navigate('/operator');
-      
-    } catch (error) {
-      console.error('Errore salvataggio documento:', error);
-      toast.error('Errore durante il salvataggio');
-    }
-  };
-
-  const startNewDocument = async () => {
-    // Salva documento corrente se ci sono pagine
-    if (currentDocument.pages.length > 0 || preview) {
-      const documentToSave = {
-        ...currentDocument,
-        pages: [...currentDocument.pages, preview].filter(Boolean)
-      };
-      await saveDocumentToDB(documentToSave);
-    }
-    
-    // Reset per nuovo documento
-    setCurrentDocument({ pages: [] });
-    setPreview(null);
-    setIsScanning(true);
-    
-    toast.success('Nuovo documento iniziato');
-  };
-
   const goBack = () => {
-    navigate('/operator');
+    // Se ci sono pagine elaborate, chiedi conferma
+    if (processedPages.length > 0) {
+      if (window.confirm(`Hai ${processedPages.length} pagine elaborate. Vuoi scartarle?`)) {
+        setProcessedPages([]);
+        navigate('/operator');
+      }
+    } else {
+      navigate('/operator');
+    }
   };
 
   if (!currentFolder) {
