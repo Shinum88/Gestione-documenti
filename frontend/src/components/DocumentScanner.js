@@ -9,7 +9,9 @@ import { useOpenCV } from '../contexts/OpenCVContext';
 const DocumentScanner = ({ 
   imageData, 
   onProcessed, 
-  onCancel 
+  onCancel,
+  onNextPage = null, // Callback opzionale per "Pagina Successiva"
+  showMultiPageOptions = false // Mostra opzioni multipagina
 }) => {
   const canvasRef = useRef(null);
   const originalCanvasRef = useRef(null);
