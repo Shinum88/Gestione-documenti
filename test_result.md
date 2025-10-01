@@ -194,9 +194,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Workflow completo Operatore con DocumentScanner"
-  stuck_tasks:
-    - "Workflow completo Operatore con DocumentScanner"
+    - "Sistema globale di gestione OpenCV.js"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
