@@ -103,14 +103,20 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Test COMPLETO del nuovo sistema di firma avanzato con sigillo opzionale.
-  NUOVE FUNZIONALITÀ DA TESTARE:
-  1. Modale firma avanzato con 3 opzioni
-  2. Firma trasportatore registrato
-  3. Firma manuale
-  4. Numero sigillo opzionale
-  5. Posizionamento sigillo (margine sinistro, stessa altezza firma)
-  6. Download ZIP con firma e sigillo
+  Test CRITICO del fix schermata nera con documento SINGOLA PAGINA.
+  PROBLEMA DA VERIFICARE:
+  Prima: Con 1 pagina, dopo "Concludi e Invia" rimaneva schermata nera e documento non arrivava al carico merci.
+  FIX IMPLEMENTATO:
+  - concludeAndShowPreview() ora accetta l'immagine finale come parametro
+  - Pulsante "Concludi e Invia" passa direttamente l'immagine a onFinish()
+  - NON chiude più il modale prima di mostrare l'anteprima
+  FLUSSO TEST SINGOLA PAGINA:
+  1. Login Operatore → Selezione Danesi
+  2. Scatta UNA SOLA Pagina: Upload immagine test, DocumentScanner appare
+  3. Elaborazione Manuale: Seleziona 4 angoli manualmente (TL, TR, BR, BL), Clicca "⚙️ Elabora (4/4 angoli)", Verifica immagine elaborata appare
+  4. Concludi con 1 Pagina (CRITICO): Clicca "✅ Concludi e Invia", VERIFICA LOG CONSOLE, VERIFICA Anteprima appare "Anteprima Documento (1 pagine)" NON schermata nera
+  5. Salvataggio: Clicca "✅ Conferma e Salva Documento", Torna alla Dashboard Operatore
+  6. Verifica Carico Merci: Logout, Login come "carico merci", Vai al folder "Danesi", VERIFICA documento con 1 pagina presente
 
 frontend:
   - task: "Sistema firma avanzato - SignatureModal"
