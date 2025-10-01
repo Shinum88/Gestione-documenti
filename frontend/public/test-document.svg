@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="white"/>
+  <rect x="50" y="50" width="700" height="900" fill="none" stroke="black" stroke-width="3"/>
+  <text x="400" y="100" font-family="Arial" font-size="32" text-anchor="middle" font-weight="bold">DOCUMENTO DI TRASPORTO</text>
+  <text x="100" y="200" font-family="Arial" font-size="20">Data: 01/10/2024</text>
+  <text x="100" y="250" font-family="Arial" font-size="20">Numero: DDT-001</text>
+  <text x="100" y="350" font-family="Arial" font-size="20" font-weight="bold">Mittente:</text>
+  <text x="120" y="380" font-family="Arial" font-size="16">Azienda Test S.r.l.</text>
+  <text x="120" y="410" font-family="Arial" font-size="16">Via Roma 123, Milano</text>
+  <text x="100" y="500" font-family="Arial" font-size="20" font-weight="bold">Destinatario:</text>
+  <text x="120" y="530" font-family="Arial" font-size="16">Cliente ABC S.p.A.</text>
+  <text x="120" y="560" font-family="Arial" font-size="16">Via Verdi 456, Roma</text>
+  <text x="100" y="650" font-family="Arial" font-size="20" font-weight="bold">Descrizione Merce:</text>
+  <text x="120" y="680" font-family="Arial" font-size="16">- Colli n. 10</text>
+  <text x="120" y="710" font-family="Arial" font-size="16">- Peso totale: 250 kg</text>
+  <text x="120" y="740" font-family="Arial" font-size="16">- Materiale: Elettronica</text>
+</svg>
