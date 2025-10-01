@@ -420,7 +420,7 @@ const CargoManagerDashboard = () => {
                 onClick={handleApplySignature}
                 disabled={loading}
               >
-                {loading ? 'Elaborazione DDT...' : `🔄 Elabora DDT + Firma (${selectedDocuments.size})`}
+                {loading ? 'Applicando firma...' : `✍️ Applica Firma Unica (${selectedDocuments.size})`}
               </button>
             );
           })()}
