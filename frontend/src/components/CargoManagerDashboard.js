@@ -250,24 +250,53 @@ const CargoManagerDashboard = () => {
             const imgHeight = 270;
             pdf.addImage(doc.pages[i], 'JPEG', 10, 10, imgWidth, imgHeight);
             
-            // Aggiungi firma sulla prima pagina (metodo classico)
+            // Aggiungi firma sulla prima pagina (margine destro, in basso)
             if (i === 0 && doc.signature?.image) {
               const signatureWidth = 50;
               const signatureHeight = 25;
-              const x = 190 - signatureWidth; // 90% width
-              const y = 270 - signatureHeight; // 95% height
+              const pageWidth = 210; // A4 width in mm
+              const pageHeight = 297; // A4 height in mm
+              const margin = 10;
               
-              pdf.addImage(doc.signature.image, 'PNG', x, y, signatureWidth, signatureHeight);
+              // Firma a destra
+              const signatureX = pageWidth - signatureWidth - margin;
+              const signatureY = pageHeight - signatureHeight - margin;
+              
+              pdf.addImage(doc.signature.image, 'PNG', signatureX, signatureY, signatureWidth, signatureHeight);
+              
+              // Nome trasportatore sotto la firma
+              if (doc.signature.transporterName) {
+                pdf.setFontSize(8);
+                pdf.setTextColor(0, 0, 0);
+                const textWidth = pdf.getTextWidth(doc.signature.transporterName);
+                const textX = signatureX + (signatureWidth - textWidth) / 2;
+                pdf.text(doc.signature.transporterName, textX, signatureY + signatureHeight + 4);
+              }
             }
             
-            // Aggiungi numero sigillo sulla prima pagina (metodo classico)
-            if (i === 0 && doc.sealNumber) {
-              pdf.setFontSize(10);
-              pdf.setTextColor(0, 0, 0);
-              pdf.text(`Sigillo: ${doc.sealNumber}`, 10, 270);
+            // Aggiungi sigillo sulla prima pagina (margine sinistro, stessa altezza della firma)
+            if (i === 0 && doc.signature?.seal) {
+              const pageHeight = 297; // A4 height in mm
+              const margin = 10;
+              const signatureHeight = 25;
+              const sealY = pageHeight - signatureHeight - margin;
               
-              if (doc.transporterName) {
-                pdf.text(`Trasportatore: ${doc.transporterName}`, 10, 275);
+              pdf.setFontSize(9);
+              pdf.setTextColor(0, 0, 0);
+              pdf.setFont(undefined, 'bold');
+              
+              let currentY = sealY;
+              
+              // Nome trasportatore per sigillo
+              if (doc.signature.seal.transporterName) {
+                pdf.text(doc.signature.seal.transporterName, margin, currentY);
+                currentY += 5;
+              }
+              
+              // Numero sigillo
+              if (doc.signature.seal.number) {
+                pdf.setFont(undefined, 'normal');
+                pdf.text(`Sigillo: ${doc.signature.seal.number}`, margin, currentY);
               }
             }
           }
