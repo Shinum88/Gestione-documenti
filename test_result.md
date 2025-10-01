@@ -113,80 +113,65 @@ user_problem_statement: |
   6. Download ZIP con firma e sigillo
 
 frontend:
-  - task: "Sistema globale di gestione OpenCV.js"
+  - task: "Sistema firma avanzato - SignatureModal"
     implemented: true
-    working: true
-    file: "src/contexts/OpenCVContext.js"
+    working: "NA"
+    file: "src/components/SignatureModal.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "main"
-        comment: "Creato OpenCVContext con pattern singleton per garantire caricamento unico di OpenCV.js. Scaricato opencv.js localmente per evitare problemi CORS. Il log mostra: '✅ OpenCV runtime completamente inizializzato' senza errori di binding."
-
-  - task: "Integrazione OpenCVProvider in App.js"
-    implemented: true
-    working: true
-    file: "src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: true
-        agent: "main"
-        comment: "App wrappata con OpenCVProvider per fornire istanza OpenCV globale a tutti i componenti."
-
-  - task: "Refactoring DocumentScanner per usare OpenCV Context"
-    implemented: true
-    working: true
-    file: "src/components/DocumentScanner.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
-        agent: "main"
-        comment: "DocumentScanner ora usa useOpenCV() hook invece di caricare la libreria internamente. Necessita test end-to-end con immagine reale per verificare rilevamento bordi e correzione prospettica."
-      - working: true
         agent: "testing"
-        comment: "✅ TESTATO CON SUCCESSO: DocumentScanner funziona perfettamente con OpenCV Context. Test completo eseguito: caricamento immagine → rilevamento automatico bordi → correzione prospettica → visualizzazione side-by-side → conferma. Log confermano: '✅ Bordi rilevati automaticamente' e '✅ Immagine elaborata visualizzata nel canvas'. Nessun BindingError rilevato."
-      - working: "NA"
-        agent: "main"
-        comment: "MIGLIORAMENTI RICHIESTI DA UTENTE: 1) Rilevamento automatico seleziona tabella interna invece di bordi esterni foglio. 2) Scritte troppo scure e segmentate. IMPLEMENTATI: detectDocumentCorners migliorato con RETR_EXTERNAL, soglia area 50%, controllo vicinanza bordi. applyDocumentFilters migliorato con parametri soglia adattiva più delicati (blockSize 21, C 4), sharpening moderato, riduzione rumore. Necessita test con documento reale."
-      - working: true
-        agent: "testing"
-        comment: "✅ MIGLIORAMENTI TESTATI CON SUCCESSO: Test completo del flusso Login Operatore → Selezione Danesi → Upload immagine test → DocumentScanner. RISULTATI: 1) ✅ Rilevamento bordi esterni FUNZIONA: '🔍 Trovati 1 contorni esterni', '✅ Contorno candidato: area=464697, punti=4, vicino ai bordi', '✅ Bordi esterni del foglio rilevati'. Il sistema ora rileva correttamente il FOGLIO INTERO (non tabelle interne). 2) ⚠️ Filtri leggibilità: errore 'opencv.fastNlMeansDenoising is not a function' ma fallback funziona. 3) ✅ Interfaccia side-by-side mostra originale vs elaborato. 4) ✅ Conferma e salvataggio completato con successo. I miglioramenti al rilevamento automatico sono operativi e funzionanti."
-      - working: false
-        agent: "testing"
-        comment: "❌ RILEVAMENTO AUTOMATICO FALLISCE: Test urgente correzione prospettica rivela problema critico. RISULTATI: 1) ❌ Rilevamento automatico FALLISCE sempre: '🔍 Trovati 1 contorni esterni' ma '⚠️ Contorno scartato: area=243736, ma troppo interno' → '⚠️ Rilevamento automatico fallito'. Il controllo 'nearBorders' è troppo restrittivo. 2) ✅ CORREZIONE PROSPETTICA FUNZIONA: Quando testata manualmente, tutti i log richiesti appaiono: '📐 Applicando correzione prospettica con angoli', '📏 Dimensioni documento: 638x380px', '📍 Punti ordinati', '✅ Matrice trasformazione calcolata', '✅ Trasformazione prospettica applicata - documento appiattito', '✅ Correzione prospettica completata'. 3) ✅ RISULTATO VISIVO CORRETTO: L'immagine elaborata mostra documento perfettamente rettangolare e frontale (non più storto). 4) ✅ Flusso completo funziona con selezione manuale. PROBLEMA: Il rilevamento automatico è ROTTO e richiede sempre intervento manuale."
-      - working: true
-        agent: "testing"
-        comment: "🎉 FLUSSO MULTIPAGINA COMPLETAMENTE FUNZIONANTE! Test completo eseguito con immagine documento-like (400x300px con bordi neri e contenuto). RISULTATI ECCELLENTI: 1) ✅ RILEVAMENTO AUTOMATICO PERFETTO: '🔍 Trovati 1 contorni esterni', '✅ Contorno candidato: area=117201 (97.7%), punti=4', '✅ Bordi esterni del foglio rilevati'. 2) ✅ CORREZIONE PROSPETTICA COMPLETA: TUTTI i log richiesti dall'utente presenti: '📐 Applicando correzione prospettica con angoli', '📏 Dimensioni documento: 395x295px', '📍 Punti ordinati: {Top-Left, Top-Right, Bottom-Right, Bottom-Left}', '✅ Trasformazione prospettica applicata - documento appiattito', '✅ Correzione prospettica completata'. 3) ✅ FLUSSO MULTIPAGINA OPERATIVO: Pulsanti '➕ Pagina Successiva' e '✅ Concludi e Invia' visibili e funzionanti. Prima pagina elaborata con successo, ritorno automatico alla fotocamera con 'Pagine elaborate: 1'. 4) ✅ INTERFACCIA SIDE-BY-SIDE: Originale (sinistra) vs Elaborato (destra) perfettamente visualizzati. Il sistema è COMPLETAMENTE FUNZIONANTE per il flusso multipagina con correzione prospettica automatica."
+        comment: "Nuovo sistema di firma avanzato implementato con modale che include: 1) Scelta tra trasportatore registrato e firma manuale, 2) Sezione sigillo opzionale con nome trasportatore e numero sigillo, 3) Anteprima firma e sigillo. Necessita test completo del flusso."
 
-  - task: "Workflow completo Operatore con DocumentScanner"
+  - task: "Gestione trasportatori - TransporterManager"
     implemented: true
-    working: true
-    file: "src/components/CameraScanner.js"
+    working: "NA"
+    file: "src/components/TransporterManager.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
-        agent: "main"
-        comment: "CameraScanner integra DocumentScanner nel flusso. Necessita test: cattura foto → elaborazione automatica → conferma → salvataggio documento."
-      - working: true
         agent: "testing"
-        comment: "✅ FLUSSO COMPLETO TESTATO: Login Operatore → Selezione terzista Danesi → Caricamento immagine test → Apertura DocumentScanner → Elaborazione automatica OpenCV → Conferma e salvataggio → Ritorno dashboard. Tutti i passaggi funzionano correttamente. Toast di successo: 'Documento elaborato e inviato al Carico Merci'."
-      - working: true
+        comment: "Sistema gestione trasportatori implementato con: 1) Creazione nuovo trasportatore con nome e azienda, 2) Canvas per disegnare firma, 3) Lista trasportatori registrati con anteprima firma, 4) Salvataggio in localStorage. Necessita test completo."
+
+  - task: "Firma manuale - SignatureCanvas"
+    implemented: true
+    working: "NA"
+    file: "src/components/SignatureCanvas.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
         agent: "testing"
-        comment: "✅ FLUSSO MULTIPAGINA COMPLETO VERIFICATO: Test end-to-end del nuovo flusso multipagina con correzione prospettica. RISULTATI: 1) ✅ Login Operatore → Selezione Danesi → Upload immagine → DocumentScanner appare IMMEDIATAMENTE. 2) ✅ Elaborazione automatica con tutti i log di correzione prospettica richiesti. 3) ✅ Pulsanti multipagina ('➕ Pagina Successiva', '✅ Concludi e Invia') visibili e funzionanti. 4) ✅ Prima pagina elaborata con successo, toast 'Scatta la prossima pagina', ritorno automatico alla fotocamera con contatore 'Pagine elaborate: 1'. 5) ✅ Sistema pronto per aggiungere pagine successive e mostrare anteprima finale. Il flusso multipagina è COMPLETAMENTE OPERATIVO come richiesto dall'utente."
-      - working: false
+        comment: "Canvas per firma manuale implementato con supporto mouse e touch, funzioni cancella e salva. Necessita test di funzionalità disegno e salvataggio."
+
+  - task: "Download ZIP con firma e sigillo"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
         agent: "testing"
-        comment: "❌ CRITICAL BLACK SCREEN BUG CONFIRMED: Complete multi-page flow test reveals critical issue. RESULTS: ✅ Manual processing works perfectly - NO automatic processing, all perspective correction logs present for 3 pages. ✅ Multi-page flow works: Page 1→2→3 with correct counters. ❌ BLACK SCREEN BUG: After clicking '✅ Concludi e Invia' on page 3, app shows black screen instead of 'Anteprima Documento'. ROOT CAUSE: DocumentScanner '✅ Concludi e Invia' button calls confirmResult() → onProcessed() which adds page but doesn't trigger preview. Missing onFinish prop to call CameraScanner.concludeAndShowPreview(). URGENT FIX NEEDED."
-      - working: true
+        comment: "Funzionalità download ZIP implementata con: 1) Generazione PDF con firma posizionata a destra, 2) Sigillo posizionato a sinistra alla stessa altezza della firma, 3) Nome file con numero sigillo se presente. Necessita test completo del download e verifica posizionamento elementi."
+
+  - task: "Integrazione sistema firma in CargoManagerDashboard"
+    implemented: true
+    working: "NA"
+    file: "src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
         agent: "testing"
-        comment: "🎉 COMPLETE SUCCESS - BLACK SCREEN BUG FIXED! Full end-to-end test of 3-page manual processing flow PASSED PERFECTLY. RESULTS: ✅ MANUAL PROCESSING ONLY: All 3 pages processed with manual corner selection, NO automatic processing as requested. ✅ PERSPECTIVE CORRECTION LOGS: All required logs present for each page: '📐 Applicando correzione prospettica', '📏 Dimensioni documento', '✅ Trasformazione prospettica applicata - documento appiattito', '✅ Correzione prospettica completata'. ✅ MULTI-PAGE FLOW: Page 1→2→3 with correct counters ('Pagine elaborate: 1', 'Pagine elaborate: 2'). ✅ PREVIEW FIXED: After '✅ Concludi e Invia' on page 3, console shows '🏁 Concludi e Invia - chiamo onFinish()' and 'Anteprima Documento (3 pagine)' appears correctly with all 3 pages visible. ✅ FINAL SAVE: 'Conferma e Salva Documento' works, shows '✅ Documento salvato' and '🔄 Navigazione a /operator', returns to dashboard with toast 'Documento con 3 pagine salvato!'. The black screen bug has been completely resolved - the onFinish prop is now working correctly."
+        comment: "Dashboard carico merci integrato con nuovo sistema firma: 1) Pulsante 'Applica Firma Unica', 2) Apertura SignatureModal, 3) Gestione dati firma e sigillo, 4) Aggiornamento stato documenti. Necessita test end-to-end completo."
 
 metadata:
   created_by: "main_agent"
