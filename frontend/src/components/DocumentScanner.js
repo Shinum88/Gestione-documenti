@@ -307,9 +307,9 @@ const DocumentScanner = ({
       const beta = 10;   // Luminosità leggermente aumentata
       opencv.convertScaleAbs(gray, enhanced, alpha, beta);
 
-      // 3. Riduci rumore mantenendo dettagli del testo
+      // 3. Riduci rumore delicatamente con filtro Gaussiano
       const denoised = new opencv.Mat();
-      opencv.fastNlMeansDenoising(enhanced, denoised, 10, 7, 21);
+      opencv.GaussianBlur(enhanced, denoised, new opencv.Size(3, 3), 0);
 
       // 4. Sharpening delicato per migliorare nitidezza
       const kernel = opencv.matFromArray(3, 3, opencv.CV_32F, [
