@@ -222,6 +222,41 @@ agent_communication:
       Necessita test end-to-end del nuovo flusso multipagina.
   - agent: "testing"
     message: |
+      🔥 CRITICAL TEST RESULTS - BLACK SCREEN BUG CONFIRMED
+      
+      COMPLETE MULTI-PAGE FLOW TEST COMPLETED:
+      
+      ✅ MANUAL PROCESSING WORKING PERFECTLY:
+      - ✅ NO automatic processing - only manual corner selection active
+      - ✅ Toast message: "Clicca sui 4 angoli del documento nell'ordine: Alto-Sinistra, Alto-Destra, Basso-Destra, Basso-Sinistra"
+      - ✅ Button counter updates correctly: (0/4) → (1/4) → (2/4) → (3/4) → (4/4)
+      - ✅ All perspective correction logs present for all 3 pages:
+        * "📐 Applicando correzione prospettica con angoli"
+        * "📏 Dimensioni documento: 532x672px"
+        * "✅ Matrice trasformazione calcolata"
+        * "✅ Trasformazione prospettica applicata - documento 'appiattito'"
+        * "✅ Correzione prospettica completata"
+      
+      ✅ MULTI-PAGE FLOW WORKING:
+      - ✅ Page 1: Manual selection → Process → "➕ Pagina Successiva" → Back to camera "Pagine elaborate: 1"
+      - ✅ Page 2: Manual selection → Process → "➕ Pagina Successiva" → Back to camera "Pagine elaborate: 2"  
+      - ✅ Page 3: Manual selection → Process → "✅ Concludi e Invia" button visible
+      
+      ❌ CRITICAL BLACK SCREEN BUG CONFIRMED:
+      - ❌ After clicking "✅ Concludi e Invia" on page 3, app shows BLACK SCREEN
+      - ❌ Should navigate to "Anteprima Documento (3 pagine)" but doesn't
+      - ❌ User is stuck on black screen with only "Pagine elaborate: 3" visible
+      - ❌ Cannot proceed to final save or return to dashboard
+      
+      🔍 ROOT CAUSE IDENTIFIED:
+      - DocumentScanner "✅ Concludi e Invia" button calls confirmResult() 
+      - This calls onProcessed() which adds page but doesn't trigger preview
+      - Missing onFinish prop to distinguish "add page" vs "finish and show preview"
+      - CameraScanner.concludeAndShowPreview() never gets called
+      
+      URGENT FIX NEEDED: Add onFinish prop to DocumentScanner for "✅ Concludi e Invia" button.
+  - agent: "testing"
+    message: |
       ✅ TEST COMPLETO SUPERATO CON SUCCESSO!
       
       Flusso testato end-to-end:
