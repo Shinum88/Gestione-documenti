@@ -108,13 +108,25 @@ const CameraScanner = () => {
   const concludeScanning = () => {
     if (!preview) return;
     
-    // Aggiungi ultima pagina se presente e salva documento senza firma
+    // Mostra il DocumentScanner per elaborazione automatica
+    setShowDocumentScanner(true);
+  };
+
+  const handleDocumentProcessed = (processedImageData) => {
+    // Aggiungi l'immagine elaborata al documento
     const finalDocument = {
       ...currentDocument,
-      pages: [...currentDocument.pages, preview]
+      pages: [...currentDocument.pages, processedImageData]
     };
     
+    // Salva il documento elaborato
     saveDocumentToDB(finalDocument);
+    setShowDocumentScanner(false);
+  };
+
+  const handleDocumentScannerCancel = () => {
+    setShowDocumentScanner(false);
+    // Torna alla preview per permettere di riscansionare
   };
 
   const saveDocumentToDB = async (documentData) => {
