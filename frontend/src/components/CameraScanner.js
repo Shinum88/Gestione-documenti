@@ -131,23 +131,24 @@ const CameraScanner = () => {
 
   const saveDocumentToDB = async (documentData) => {
     try {
-      // Crea documento senza firma - la firma verrà applicata dal carico merci
+      // Crea documento elaborato - pronto per la firma dal carico merci
       const newDocument = {
         _id: Date.now().toString(),
         folderId: currentFolder._id,
         name: `Documento_${Date.now()}`,
         pages: documentData.pages.filter(Boolean),
-        signed: false, // Sempre false - firma applicata dal carico merci
+        signed: false,
         signature: null,
-        sealNumber: null, // Campo per numero sigillo
-        transporterName: null, // Campo per nome trasportatore
+        sealNumber: null,
+        transporterName: null,
+        processedByOperator: true, // Flag per indicare elaborazione operatore
         createdAt: new Date().toISOString()
       };
       
       // Mock POST /api/documents
       setDocuments(prev => [...prev, newDocument]);
       
-      toast.success('Documento salvato con successo');
+      toast.success('Documento elaborato e inviato al Carico Merci');
       
       // Reset e torna alla selezione terzista
       setCurrentDocument({ pages: [] });
