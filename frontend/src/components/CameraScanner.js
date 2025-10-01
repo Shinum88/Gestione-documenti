@@ -141,29 +141,44 @@ const CameraScanner = () => {
    * Conferma finale e salva il documento
    */
   const confirmAndSave = () => {
-    const finalDocument = {
-      _id: Date.now().toString(),
-      folderId: currentFolder._id,
-      name: `Documento_${Date.now()}`,
-      pages: processedPages,
-      signed: false,
-      signature: null,
-      sealNumber: null,
-      transporterName: null,
-      processedByOperator: true,
-      createdAt: new Date().toISOString()
-    };
-    
-    // Mock POST /api/documents
-    setDocuments(prev => [...prev, finalDocument]);
-    
-    toast.success(`Documento con ${processedPages.length} pagine salvato!`);
-    
-    // Reset e torna alla dashboard
-    setProcessedPages([]);
-    setShowPreview(false);
-    setCurrentPhoto(null);
-    navigate('/operator');
+    try {
+      const finalDocument = {
+        _id: Date.now().toString(),
+        folderId: currentFolder._id,
+        name: `Documento_${Date.now()}`,
+        pages: processedPages,
+        signed: false,
+        signature: null,
+        sealNumber: null,
+        transporterName: null,
+        processedByOperator: true,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Mock POST /api/documents
+      setDocuments(prev => [...prev, finalDocument]);
+      
+      console.log('✅ Documento salvato:', finalDocument);
+      toast.success(`Documento con ${processedPages.length} pagine salvato!`);
+      
+      // IMPORTANTE: Ferma la camera prima di navigare
+      stopCamera();
+      
+      // Reset completo di tutti gli stati
+      setProcessedPages([]);
+      setShowPreview(false);
+      setCurrentPhoto(null);
+      setShowDocumentScanner(false);
+      setIsScanning(false);
+      
+      // Naviga alla dashboard operatore
+      console.log('🔄 Navigazione a /operator');
+      navigate('/operator');
+      
+    } catch (error) {
+      console.error('❌ Errore salvataggio documento:', error);
+      toast.error('Errore durante il salvataggio del documento');
+    }
   };
 
   /**
