@@ -257,10 +257,10 @@ const CargoManagerDashboard = () => {
               const pageWidth = 210; // A4 width in mm
               const pageHeight = 297; // A4 height in mm
               const margin = 10;
-              const sealOffsetUp = 20; // 20mm più in alto rispetto al fondo
+              const sealOffsetUp = 30; // 30mm più in alto rispetto al fondo (era 20mm)
               
-              // Calcola posizione Y (stessa per firma e sigillo)
-              const elementY = pageHeight - signatureHeight - margin - sealOffsetUp;
+              // Calcola posizione Y per sigillo
+              const sealY = pageHeight - signatureHeight - margin - sealOffsetUp;
               
               // 1. SIGILLO (se presente) - Margine sinistro
               if (doc.signature.seal) {
@@ -268,7 +268,7 @@ const CargoManagerDashboard = () => {
                 pdf.setTextColor(0, 0, 0);
                 pdf.setFont(undefined, 'bold'); // Grassetto
                 
-                let currentY = elementY;
+                let currentY = sealY;
                 
                 // Nome trasportatore per sigillo (grassetto)
                 if (doc.signature.seal.transporterName) {
@@ -282,21 +282,27 @@ const CargoManagerDashboard = () => {
                 }
               }
               
-              // 2. FIRMA - Centro orizzontale, stessa altezza del sigillo
-              const signatureX = (pageWidth - signatureWidth) / 2; // Centro orizzontale
-              const signatureY = elementY;
+              // 2. FIRMA - Centro + 25mm a destra, 30mm dal fondo
+              const signatureCenterX = (pageWidth - signatureWidth) / 2;
+              const signatureX = signatureCenterX + 25; // Spostata 25mm a destra del centro
+              const signatureY = sealY; // Stessa altezza del sigillo (30mm dal fondo)
               
-              pdf.addImage(doc.signature.image, 'PNG', signatureX, signatureY, signatureWidth, signatureHeight);
-              
-              // Nome trasportatore sotto la firma (centro)
+              // Nome trasportatore A SINISTRA della firma (grassetto, 9pt come sigillo)
               if (doc.signature.transporterName) {
-                pdf.setFontSize(7);
+                pdf.setFontSize(9);
                 pdf.setTextColor(0, 0, 0);
-                pdf.setFont(undefined, 'normal');
-                const textWidth = pdf.getTextWidth(doc.signature.transporterName);
-                const textX = signatureX + (signatureWidth - textWidth) / 2;
-                pdf.text(doc.signature.transporterName, textX, signatureY + signatureHeight + 3);
+                pdf.setFont(undefined, 'bold');
+                
+                // Posiziona a sinistra della firma con piccolo margine
+                const textX = signatureX - 5; // 5mm a sinistra della firma
+                const textY = signatureY + (signatureHeight / 2) + 2; // Centrato verticalmente sulla firma
+                
+                // Allinea il testo a destra per farlo terminare vicino alla firma
+                pdf.text(doc.signature.transporterName, textX, textY, { align: 'right' });
               }
+              
+              // Immagine firma
+              pdf.addImage(doc.signature.image, 'PNG', signatureX, signatureY, signatureWidth, signatureHeight);
             }
           }
           
