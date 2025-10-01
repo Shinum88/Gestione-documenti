@@ -137,27 +137,33 @@ frontend:
 
   - task: "Refactoring DocumentScanner per usare OpenCV Context"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/DocumentScanner.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "DocumentScanner ora usa useOpenCV() hook invece di caricare la libreria internamente. Necessita test end-to-end con immagine reale per verificare rilevamento bordi e correzione prospettica."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTATO CON SUCCESSO: DocumentScanner funziona perfettamente con OpenCV Context. Test completo eseguito: caricamento immagine → rilevamento automatico bordi → correzione prospettica → visualizzazione side-by-side → conferma. Log confermano: '✅ Bordi rilevati automaticamente' e '✅ Immagine elaborata visualizzata nel canvas'. Nessun BindingError rilevato."
 
   - task: "Workflow completo Operatore con DocumentScanner"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/CameraScanner.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "CameraScanner integra DocumentScanner nel flusso. Necessita test: cattura foto → elaborazione automatica → conferma → salvataggio documento."
+      - working: true
+        agent: "testing"
+        comment: "✅ FLUSSO COMPLETO TESTATO: Login Operatore → Selezione terzista Danesi → Caricamento immagine test → Apertura DocumentScanner → Elaborazione automatica OpenCV → Conferma e salvataggio → Ritorno dashboard. Tutti i passaggi funzionano correttamente. Toast di successo: 'Documento elaborato e inviato al Carico Merci'."
 
 metadata:
   created_by: "main_agent"
