@@ -342,6 +342,8 @@ const CameraScanner = () => {
           imageData={currentPhoto}
           onProcessed={handlePageProcessed}
           onCancel={handleDocumentScannerCancel}
+          onNextPage={addNextPage}
+          showMultiPageOptions={true}
         />
       )}
     </div>
