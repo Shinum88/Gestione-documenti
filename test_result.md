@@ -115,15 +115,18 @@ user_problem_statement: |
 frontend:
   - task: "Sistema firma avanzato - SignatureModal"
     implemented: true
-    working: "NA"
+    working: true
     file: "src/components/SignatureModal.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Nuovo sistema di firma avanzato implementato con modale che include: 1) Scelta tra trasportatore registrato e firma manuale, 2) Sezione sigillo opzionale con nome trasportatore e numero sigillo, 3) Anteprima firma e sigillo. Necessita test completo del flusso."
+      - working: true
+        agent: "testing"
+        comment: "✅ SISTEMA FIRMA AVANZATO COMPLETAMENTE FUNZIONANTE! Test completo eseguito: 1) ✅ MODALE APRE CORRETTAMENTE: Titolo 'Applica Firma Unica', radio buttons funzionanti. 2) ✅ SEZIONE SIGILLO GIALLA: Background corretto, testo 'Il sigillo apparirà sul margine sinistro, alla stessa altezza della firma', campi opzionali. 3) ✅ FIRMA MANUALE PERFETTA: Canvas si apre, disegno funziona, salvataggio corretto, anteprima visibile. 4) ✅ CONSOLE LOGS CONFERMANO: '✅ Firma configurata: {type: manual, image: data:image/png...}' e '📝 Applicando firma con dati'. 5) ✅ SIGILLO OPZIONALE: Permette completamento senza compilare campi sigillo. 6) ✅ TOAST SUCCESSO: 'Firma applicata a 1 documenti'. Il sistema è COMPLETAMENTE OPERATIVO."
 
   - task: "Gestione trasportatori - TransporterManager"
     implemented: true
