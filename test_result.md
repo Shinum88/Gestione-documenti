@@ -103,12 +103,14 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Risolvere l'errore "BindingError: Cannot register public name 'IntVector' twice" causato dal caricamento multiplo di OpenCV.js.
-  Implementare il flusso completo di scansione con DocumentScanner che include:
-  - Rilevamento automatico dei bordi del documento
-  - Correzione prospettica automatica
-  - Applicazione filtri da scanner
-  - Selezione manuale degli angoli come fallback
+  Test COMPLETO del nuovo sistema di firma avanzato con sigillo opzionale.
+  NUOVE FUNZIONALITÀ DA TESTARE:
+  1. Modale firma avanzato con 3 opzioni
+  2. Firma trasportatore registrato
+  3. Firma manuale
+  4. Numero sigillo opzionale
+  5. Posizionamento sigillo (margine sinistro, stessa altezza firma)
+  6. Download ZIP con firma e sigillo
 
 frontend:
   - task: "Sistema globale di gestione OpenCV.js"
