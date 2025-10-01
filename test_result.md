@@ -164,9 +164,9 @@ frontend:
 
   - task: "Workflow completo Operatore con DocumentScanner"
     implemented: true
-    working: true
+    working: false
     file: "src/components/CameraScanner.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -179,6 +179,9 @@ frontend:
       - working: true
         agent: "testing"
         comment: "✅ FLUSSO MULTIPAGINA COMPLETO VERIFICATO: Test end-to-end del nuovo flusso multipagina con correzione prospettica. RISULTATI: 1) ✅ Login Operatore → Selezione Danesi → Upload immagine → DocumentScanner appare IMMEDIATAMENTE. 2) ✅ Elaborazione automatica con tutti i log di correzione prospettica richiesti. 3) ✅ Pulsanti multipagina ('➕ Pagina Successiva', '✅ Concludi e Invia') visibili e funzionanti. 4) ✅ Prima pagina elaborata con successo, toast 'Scatta la prossima pagina', ritorno automatico alla fotocamera con contatore 'Pagine elaborate: 1'. 5) ✅ Sistema pronto per aggiungere pagine successive e mostrare anteprima finale. Il flusso multipagina è COMPLETAMENTE OPERATIVO come richiesto dall'utente."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL BLACK SCREEN BUG CONFIRMED: Complete multi-page flow test reveals critical issue. RESULTS: ✅ Manual processing works perfectly - NO automatic processing, all perspective correction logs present for 3 pages. ✅ Multi-page flow works: Page 1→2→3 with correct counters. ❌ BLACK SCREEN BUG: After clicking '✅ Concludi e Invia' on page 3, app shows black screen instead of 'Anteprima Documento'. ROOT CAUSE: DocumentScanner '✅ Concludi e Invia' button calls confirmResult() → onProcessed() which adds page but doesn't trigger preview. Missing onFinish prop to call CameraScanner.concludeAndShowPreview(). URGENT FIX NEEDED."
 
 metadata:
   created_by: "main_agent"
