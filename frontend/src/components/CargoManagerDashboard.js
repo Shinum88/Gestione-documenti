@@ -32,10 +32,23 @@ const CargoManagerDashboard = () => {
 
   const terzisti = ['Danesi', 'Happening', 'Almax', 'Veliero', 'Gab', 'Kuoyo'];
 
-  // Inizializza trasportatori dal localStorage
+  // Inizializza trasportatori da Firebase
   React.useEffect(() => {
-    const savedTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
-    setTransporters(savedTransporters);
+    const loadTransporters = async () => {
+      try {
+        console.log('📥 Caricando trasportatori da Firebase...');
+        const firebaseTransporters = await window.leggiTrasportatori();
+        setTransporters(firebaseTransporters);
+        console.log(`✅ Caricati ${firebaseTransporters.length} trasportatori da Firebase`);
+      } catch (error) {
+        console.error('❌ Errore caricamento trasportatori:', error);
+        // Fallback a localStorage se Firebase fallisce
+        const savedTransporters = JSON.parse(localStorage.getItem('transporters') || '[]');
+        setTransporters(savedTransporters);
+      }
+    };
+    
+    loadTransporters();
   }, []);
 
   const handleLogout = () => {
