@@ -237,8 +237,7 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "Integrazione Firebase Firestore per salvataggio documenti"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
