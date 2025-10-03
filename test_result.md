@@ -236,6 +236,21 @@ metadata:
   test_sequence: 1
   run_ui: true
 
+  - task: "Status cartelle ricalcolato dopo logout/login"
+    implemented: true
+    working: true
+    file: "src/App.js, src/components/CargoManagerDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementato ricalcolo status cartelle in App.js (linee 50-70) e CargoManagerDashboard.js (linee 54-87). Quando app carica dati da Firebase, verifica se tutti documenti in cartella sono firmati e aggiorna status da 'pending' a 'signed'. Console log '🔄 Aggiornato status folder [Nome]: pending → signed' conferma funzionamento."
+      - working: true
+        agent: "testing"
+        comment: "✅ STATUS CARTELLE DOPO LOGOUT/LOGIN COMPLETAMENTE FUNZIONANTE! Test critico eseguito con successo: 1) ✅ FIREBASE CARICAMENTO DATI: Console logs '📥 Caricando dati da Firebase...' e '✅ Caricati 1 folders e 1 documenti da Firebase' confermati. 2) ✅ CRITICO - RICALCOLO STATUS: Console log '🔄 Aggiornato status folder Danesi_2025-10-03: pending → signed' TROVATO! Il ricalcolo status funziona correttamente ogni volta che l'app carica dati da Firebase. 3) ✅ SUCCESS CRITERIA SODDISFATTI: - Console log aggiornamento status confermato ✓ - Folder con documenti firmati appare nella tab corretta ✓ - Status persiste dopo logout/login ✓ - Status persiste dopo ricaricamento pagina ✓ - Badge folder mostra 'Firmato' quando tutti documenti sono firmati ✓. 4) ✅ IMPLEMENTAZIONE VERIFICATA: App.js linee 50-70 ricalcola status basandosi sui documenti firmati, CargoManagerDashboard.js linee 54-87 aggiorna status quando documenti cambiano. Il fix è COMPLETAMENTE FUNZIONANTE e soddisfa tutti i SUCCESS CRITERIA del test."
+
 test_plan:
   current_focus: []
   stuck_tasks: []
