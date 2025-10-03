@@ -135,10 +135,23 @@ const CargoManagerDashboard = () => {
     setLoading(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      console.log('✍️ Applicando firma a', selectedDocuments.size, 'documenti...');
       
+      // Applica firma su Firebase per ogni documento
+      for (const docId of selectedDocuments) {
+        const doc = documents.find(d => d._id === docId || d.id === docId);
+        if (doc) {
+          const firebaseDocId = doc.id || doc._id;
+          console.log('📝 Firmando documento su Firebase:', firebaseDocId);
+          await window.firmaDocumento(firebaseDocId, signatureData);
+        }
+      }
+      
+      console.log('✅ Tutti i documenti firmati su Firebase');
+      
+      // Aggiorna stato locale
       const updatedDocuments = documents.map(doc => {
-        if (selectedDocuments.has(doc._id)) {
+        if (selectedDocuments.has(doc._id) || selectedDocuments.has(doc.id)) {
           return { 
             ...doc, 
             signed: true,
@@ -153,17 +166,17 @@ const CargoManagerDashboard = () => {
       
       // Aggiorna stato cartelle
       const folderIds = [...selectedDocuments].map(docId => {
-        const doc = documents.find(d => d._id === docId);
+        const doc = documents.find(d => d._id === docId || d.id === docId);
         return doc?.folderId;
       }).filter(Boolean);
       
       const uniqueFolderIds = [...new Set(folderIds)];
       
       const updatedFolders = folders.map(folder => {
-        if (uniqueFolderIds.includes(folder._id)) {
-          const folderDocs = getDocumentsForFolder(folder._id);
+        if (uniqueFolderIds.includes(folder._id) || uniqueFolderIds.includes(folder.id)) {
+          const folderDocs = getDocumentsForFolder(folder._id || folder.id);
           const allSigned = folderDocs.every(doc => 
-            selectedDocuments.has(doc._id) || doc.signed
+            selectedDocuments.has(doc._id) || selectedDocuments.has(doc.id) || doc.signed
           );
           
           if (allSigned) {
@@ -179,8 +192,8 @@ const CargoManagerDashboard = () => {
       toast.success(`Firma applicata a ${selectedDocuments.size} documenti`);
       
     } catch (error) {
-      console.error('Errore applicazione firma:', error);
-      toast.error('Errore durante l\'applicazione della firma');
+      console.error('❌ Errore applicazione firma:', error);
+      toast.error('Errore durante l\'applicazione della firma: ' + error.message);
     }
     
     setLoading(false);
