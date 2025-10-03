@@ -167,6 +167,16 @@
             // Inizializza Firebase
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
+            
+            // ⚙️ CONFIGURAZIONE PER FIREFOX E ALTRI BROWSER
+            // Risolve problemi CORS e connessione
+            db.settings({
+                cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+                experimentalForceLongPolling: true,  // Risolve problemi Firefox
+                useFetchStreams: false               // Compatibilità cross-browser
+            });
+            
+            console.log("⚙️ Firestore configurato per compatibilità cross-browser (Firefox, Safari, Edge)");
 
             // ✅ FUNZIONI GLOBALI per salvare/leggere documenti
             window.salvaDocumento = async (documento) => {
