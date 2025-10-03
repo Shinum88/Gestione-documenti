@@ -47,7 +47,29 @@ function App() {
         
         console.log(`✅ Caricati ${firebaseFolders.length} folders e ${firebaseDocuments.length} documenti da Firebase`);
         
-        setFolders(firebaseFolders);
+        // Ricalcola lo status delle cartelle basandosi sui documenti firmati
+        const foldersWithCorrectStatus = firebaseFolders.map(folder => {
+          const folderDocs = firebaseDocuments.filter(doc => 
+            doc.folderId === folder._id || doc.folderId === folder.id
+          );
+          
+          if (folderDocs.length === 0) {
+            return folder; // Mantieni status originale se non ci sono documenti
+          }
+          
+          // Se tutti i documenti sono firmati, status = 'signed'
+          // Se almeno uno non è firmato, status = 'pending'
+          const allSigned = folderDocs.every(doc => doc.signed === true);
+          const newStatus = allSigned ? 'signed' : 'pending';
+          
+          if (newStatus !== folder.status) {
+            console.log(`🔄 Aggiornato status folder ${folder.name}: ${folder.status} → ${newStatus}`);
+          }
+          
+          return { ...folder, status: newStatus };
+        });
+        
+        setFolders(foldersWithCorrectStatus);
         setDocuments(firebaseDocuments);
         
         // Se non ci sono dati, inizializza con mock data
