@@ -159,11 +159,10 @@ const CameraScanner = () => {
   /**
    * Conferma finale e salva il documento
    */
-  const confirmAndSave = () => {
+  const confirmAndSave = async () => {
     try {
       const finalDocument = {
-        _id: Date.now().toString(),
-        folderId: currentFolder._id,
+        folderId: currentFolder._id || currentFolder.id,
         name: `Documento_${Date.now()}`,
         pages: processedPages,
         signed: false,
@@ -174,10 +173,17 @@ const CameraScanner = () => {
         createdAt: new Date().toISOString()
       };
       
-      // Mock POST /api/documents
-      setDocuments(prev => [...prev, finalDocument]);
+      console.log('💾 Salvando documento su Firebase...', finalDocument);
       
-      console.log('✅ Documento salvato:', finalDocument);
+      // Salva su Firebase usando la funzione globale
+      const docId = await window.salvaDocumento(finalDocument);
+      
+      console.log('✅ Documento salvato su Firebase con ID:', docId);
+      
+      // Aggiorna anche lo stato locale per sincronizzazione immediata
+      const savedDocument = { ...finalDocument, _id: docId, id: docId };
+      setDocuments(prev => [...prev, savedDocument]);
+      
       toast.success(`Documento con ${processedPages.length} pagine salvato!`);
       
       // IMPORTANTE: Ferma la camera prima di navigare
@@ -196,7 +202,7 @@ const CameraScanner = () => {
       
     } catch (error) {
       console.error('❌ Errore salvataggio documento:', error);
-      toast.error('Errore durante il salvataggio del documento');
+      toast.error('Errore durante il salvataggio del documento: ' + error.message);
     }
   };
 
