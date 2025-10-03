@@ -1,0 +1,71 @@
+<analysis>
+The previous AI engineer successfully developed a full-stack document management application for logistics, focusing heavily on the React frontend with mock APIs. Key achievements include implementing an OpenCV.js-powered document scanner for automatic perspective correction and enhancement, a multi-page scanning workflow, and a sophisticated signature management system for the Carico Merci role.
+
+The development was highly iterative, driven by specific user feedback regarding document processing accuracy, UI flow, and PDF output formatting. Notable fixes involved resolving OpenCV.js loading errors by localizing the library and implementing a global context, refining document edge detection and text clarity, and fixing navigation issues in multi-page and single-page scanning flows.
+
+The most recent work involved integrating Firebase Firestore for data persistence. The engineer followed the user's specific (though non-standard for React) instructions to load Firebase SDK via CDN and expose global  functions. The current challenge is that despite Firebase being technically loaded, the application's Concludi e Invia button is not calling the save function, preventing documents from being persisted in Firestore.
+</analysis>
+
+<product_requirements>
+The application aims to be a responsive web app for tablets, managing logistics documents (DDTs) for two roles: Operatore and Carico Merci. The Operatore logs in, selects a contractor, uses the camera to photograph documents, manually selects four corners for processing, which then applies perspective correction and scanner-like filters via OpenCV.js. The processed document is saved as pending signature. The Carico Merci role logs in, views pending documents, can select multiple, applies a single electronic signature (from registered transporters or manual, with an optional seal number), and downloads signed documents as a ZIP. The system must accurately position signatures and seals on the A4 PDF output, including specific text descriptions and formatting.
+</product_requirements>
+
+<key_technical_concepts>
+- **Frontend Framework:** React.js
+- **Image Processing:** OpenCV.js for perspective correction and filters.
+- **PDF Generation:**  for creating signed documents.
+- **File Archiving:**  for creating ZIP archives.
+- **State Management:** React hooks and  (mock data, being replaced by Firebase).
+- **Database:** Firebase Firestore (new integration).
+</key_technical_concepts>
+
+<code_architecture>
+The application is a standard Create React App project located in . State is managed at the component level and in , previously using  for mock data.
+
+**Directory Structure:**
+
+
+**Key Files & Changes:**
+
+-   **/app/frontend/src/App.js**
+    -   **Importance:** Main entry point, handles routing and global state.
+    -   **Changes:** Wrapped with  to ensure single OpenCV.js initialization.
+
+-   **/app/frontend/public/index.html**
+    -   **Importance:** Root HTML file.
+    -   **Changes:** Modified to load  locally to fix CORS errors. Recently updated to include Firebase SDK via CDN and define global  and  functions, as per user's request.
+
+-   **/app/frontend/src/contexts/OpenCVContext.js**
+    -   **Importance:** New file to manage the global loading and instance of OpenCV.js, preventing multiple initializations.
+
+-   **/app/frontend/src/components/CameraScanner.js**
+    -   **Importance:** Manages the Operator's document scanning workflow.
+    -   **Changes:** Heavily refactored for the multi-page workflow, showing  immediately after each photo, handling page aggregation, and fixing black screen issues by stopping the camera and resetting states. It also includes the logic to call  with the processed image(s).
+
+-   **/app/frontend/src/components/DocumentScanner.js**
+    -   **Importance:** Core component for OpenCV.js document processing (edge detection, perspective correction, filtering).
+    -   **Changes:** Removed automatic edge detection, now relies solely on manual corner selection. Improved perspective correction by fixing  timing issues and enhancing . Modified to handle multi-page flow, accepting  and  callbacks.
+
+-   **/app/frontend/src/components/CargoManagerDashboard.js**
+    -   **Importance:** Main interface for Carico Merci role, displaying documents and applying signatures.
+    -   **Changes:** Integrated  for advanced signature options (registered, manual, seal). Updated PDF generation () to incorporate precise positioning and formatting for signatures, transporter names, and optional seal numbers based on strict user requirements. Fixed filtering logic for 'pending' vs 'signed' documents.
+
+-   **/app/frontend/src/components/SignatureModal.js**
+    -   **Importance:** New component for the advanced signature and seal input interface.
+    -   **Changes:** Allows selection of registered transporters, manual signature drawing, and optional seal number input.
+</code_architecture>
+
+<pending_tasks>
+- Investigate why  is not being called from the Concludi e Invia button in the application.
+- Implement the actual saving logic using the global Firebase functions (, ) in the React components, replacing the  mock.
+</pending_tasks>
+
+<current_work>
+The immediate work involved integrating Firebase Firestore for data persistence. The previous engineer followed specific user instructions to add Firebase SDK scripts directly into . This setup exposes global functions like , , , , , , , and .
+
+Tests confirmed that these global Firebase functions are correctly loaded and accessible in the browser console. However, the user reported that documents are still not being saved to Firebase. The problem statement explicitly states: Il problema è che il salvataggio NON VIENE MAI CHIAMATO dall’app... il pulsante “Concludi e Invia” non chiama window.salvaDocumento. La funzione window.salvaDocumento NON sta salvando su Firestore. Sta solo simulando il successo, ma non comunica con Firebase. The latest interaction includes an error image from the console which needs analysis.
+</current_work>
+
+<optional_next_step>
+Analyze the provided console error image and debug why  is not being called or correctly saving data to Firebase from the Concludi e Invia action.
+</optional_next_step>
