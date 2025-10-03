@@ -51,6 +51,41 @@ const CargoManagerDashboard = () => {
     loadTransporters();
   }, []);
 
+  // Ricalcola lo status delle cartelle quando i documenti cambiano
+  React.useEffect(() => {
+    if (folders.length > 0 && documents.length > 0) {
+      const updatedFolders = folders.map(folder => {
+        const folderDocs = documents.filter(doc => 
+          doc.folderId === folder._id || doc.folderId === folder.id
+        );
+        
+        if (folderDocs.length === 0) {
+          return folder;
+        }
+        
+        // Se tutti i documenti sono firmati, status = 'signed'
+        const allSigned = folderDocs.every(doc => doc.signed === true);
+        const newStatus = allSigned ? 'signed' : 'pending';
+        
+        if (newStatus !== folder.status) {
+          return { ...folder, status: newStatus };
+        }
+        
+        return folder;
+      });
+      
+      // Aggiorna solo se ci sono cambiamenti
+      const hasChanges = updatedFolders.some((folder, index) => 
+        folder.status !== folders[index].status
+      );
+      
+      if (hasChanges) {
+        console.log('🔄 Ricalcolato status folders basandosi sui documenti firmati');
+        setFolders(updatedFolders);
+      }
+    }
+  }, [documents]); // Ricalcola quando documents cambia
+
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('user');
