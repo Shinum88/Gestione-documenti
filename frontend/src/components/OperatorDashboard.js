@@ -19,41 +19,51 @@ const OperatorDashboard = () => {
   const handleTerzistaSelect = async (terzista) => {
     setLoading(true);
     
-    // Genera nome cartella con data corrente
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const folderName = `${terzista}_${today}`;
-    
-    // Simula chiamata API per verificare esistenza cartella
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Controlla se cartella esiste già
-    const existingFolder = folders.find(f => f.name === folderName);
-    
-    if (existingFolder) {
-      toast.success('Cartella esistente, procedi con la scansione');
-      setCurrentFolder(existingFolder);
-    } else {
-      // Crea nuova cartella
-      const newFolder = {
-        _id: Date.now().toString(),
-        name: folderName,
-        terzista,
-        date: new Date().toISOString(),
-        status: 'pending'
-      };
+    try {
+      // Genera nome cartella con data corrente
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const folderName = `${terzista}_${today}`;
       
-      // Simula POST /api/folders
-      const updatedFolders = [...folders, newFolder];
-      setFolders(updatedFolders);
-      setCurrentFolder(newFolder);
+      // Controlla se cartella esiste già
+      const existingFolder = folders.find(f => f.name === folderName);
       
-      toast.success('Nuova cartella creata');
+      if (existingFolder) {
+        toast.success('Cartella esistente, procedi con la scansione');
+        setCurrentFolder(existingFolder);
+      } else {
+        // Crea nuova cartella
+        const newFolder = {
+          name: folderName,
+          terzista,
+          date: new Date().toISOString(),
+          status: 'pending'
+        };
+        
+        console.log('💾 Salvando folder su Firebase...', newFolder);
+        
+        // Salva su Firebase usando la funzione globale
+        const folderId = await window.salvaFolder(newFolder);
+        
+        console.log('✅ Folder salvato su Firebase con ID:', folderId);
+        
+        // Aggiorna stato locale
+        const savedFolder = { ...newFolder, _id: folderId, id: folderId };
+        setFolders(prev => [...prev, savedFolder]);
+        setCurrentFolder(savedFolder);
+        
+        toast.success('Nuova cartella creata');
+      }
+      
+      setLoading(false);
+      
+      // Naviga al scanner
+      navigate('/scanner');
+      
+    } catch (error) {
+      console.error('❌ Errore creazione cartella:', error);
+      toast.error('Errore durante la creazione della cartella: ' + error.message);
+      setLoading(false);
     }
-    
-    setLoading(false);
-    
-    // Naviga al scanner
-    navigate('/scanner');
   };
 
   return (
