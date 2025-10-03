@@ -103,19 +103,41 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Test COMPLETO delle 3 problematiche risolte: documenti in attesa, dimensioni firma uniformi, descrizione con sigillo.
+  INTEGRAZIONE FIREBASE FIRESTORE per persistenza dati.
+  PROBLEMA: Il pulsante "Concludi e Invia" NON chiamava window.salvaDocumento() - documenti non venivano salvati su Firebase.
+  
   MODIFICHE IMPLEMENTATE:
-  1. ✅ Documenti salvati dall'operatore appaiono in "In Attesa" (non "Firmati")
-  2. ✅ Dimensioni firma uniformi: 30mm x 20mm (sia registrata che manuale)
-  3. ✅ Sigillo posizionato 10mm più in alto della firma
-  4. ✅ Descrizione con formato: "✓ Firmato da: [Nome] 🏷️ Sigillo: [Numero]" (arancione)
-  FLUSSO TEST COMPLETO:
-  PARTE 1: Documento Operatore in "In Attesa"
-  1. Login Operatore → Danesi, 2. Upload immagine singola, 3. Seleziona 4 angoli manualmente, 4. Elabora, 5. Clicca "Concludi e Invia", 6. Anteprima appare, 7. Clicca "Conferma e Salva", 8. Logout, 9. Login come "carico merci", 10. VERIFICA CRITICA: Vai a tab "In Attesa" (NON "Firmati"), Il documento salvato dall'operatore DEVE essere visibile, Stato: "In Attesa" (non firmato)
-  PARTE 2: Firma Manuale con Sigillo
-  11. Nella tab "In Attesa", seleziona il documento, 12. Clicca "✍️ Applica Firma Unica", 13. Seleziona "Firma Manuale", 14. Disegna firma, 15. Salva, 16. COMPILA SIGILLO: Nome Trasportatore: "Trasporti Rossi", N° Sigillo: "TR-2025-001", 17. Clicca "Applica Firma", 18. VERIFICA DESCRIZIONE: Documento ora in tab "Firmati", Sotto il nome documento DEVE apparire: ✓ Firmato da: Firma Manuale, 🏷️ Sigillo: TR-2025-001 (in ARANCIONE #f59e0b)
-  PARTE 3: Download PDF e Verifica Posizionamento
-  19. Seleziona il documento firmato, 20. Clicca "⬇️ Scarica ZIP Documenti Firmati", 21. VERIFICA PDF: Apri il PDF scaricato, Firma: margine destro in basso, dimensioni circa 30mm x 20mm, Sigillo: margine sinistro, posizionato circa 10mm più in alto della firma, Nome trasportatore: "Trasporti Rossi" (bold), Numero sigillo: "Sigillo: TR-2025-001" (sotto nome), Verificare che sigillo non sovrapponga testo del documento
+  1. ✅ CameraScanner.js: confirmAndSave() ora chiama window.salvaDocumento() per salvare documenti su Firebase
+  2. ✅ OperatorDashboard.js: handleTerzistaSelect() ora chiama window.salvaFolder() per creare cartelle su Firebase
+  3. ✅ CargoManagerDashboard.js: applySignatureToSelectedDocuments() ora chiama window.firmaDocumento() per firmare su Firebase
+  4. ✅ CargoManagerDashboard.js: Carica trasportatori da Firebase con window.leggiTrasportatori()
+  5. ✅ TransporterManager.js: saveTransporter() ora chiama window.salvaTrasportatore() per salvare su Firebase
+  6. ✅ App.js: Carica folders e documents da Firebase all'avvio con window.leggiFolders() e window.leggiDocumenti()
+  
+  FLUSSO TEST COMPLETO FIREBASE:
+  PARTE 1: Operatore - Creazione Cartella e Documento
+  1. Login Operatore (operatore/Welcome00)
+  2. Seleziona terzista "Danesi"
+  3. VERIFICA CONSOLE: "💾 Salvando folder su Firebase..." e "✅ Folder salvato su Firebase con ID: [ID]"
+  4. Upload immagine, seleziona 4 angoli, elabora
+  5. Clicca "Concludi e Invia", poi "Conferma e Salva"
+  6. VERIFICA CONSOLE: "💾 Salvando documento su Firebase..." e "✅ Documento salvato su Firebase con ID: [ID]"
+  7. Logout
+  
+  PARTE 2: Carico Merci - Visualizzazione e Firma
+  8. Login Carico Merci (carico merci/Welcome00)
+  9. VERIFICA: Documento appare in tab "In Attesa" (caricato da Firebase)
+  10. Seleziona documento, clicca "✍️ Applica Firma Unica"
+  11. Seleziona "Firma Manuale", disegna firma, salva
+  12. Compila sigillo: Nome "Trasporti Rossi", N° "TR-2025-001"
+  13. Clicca "Applica Firma"
+  14. VERIFICA CONSOLE: "✍️ Applicando firma a 1 documenti..." e "✅ Tutti i documenti firmati su Firebase"
+  15. VERIFICA: Documento ora in tab "Firmati"
+  
+  PARTE 3: Verifica Persistenza
+  16. Ricarica pagina (F5)
+  17. VERIFICA CONSOLE: "📥 Caricando dati da Firebase..." e "✅ Caricati [N] folders e [N] documenti da Firebase"
+  18. VERIFICA: Tutti i dati (cartelle, documenti, firme) sono ancora presenti dopo ricaricamento
 
 frontend:
   - task: "Fix schermata nera documento singola pagina"
