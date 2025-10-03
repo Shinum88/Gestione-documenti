@@ -98,7 +98,7 @@ const TransporterManager = ({
     setHasSignature(false);
   };
 
-  const saveTransporter = () => {
+  const saveTransporter = async () => {
     if (!newTransporter.name.trim() || !newTransporter.company.trim()) {
       toast.error('Inserisci nome e trasportatore');
       return;
@@ -109,28 +109,43 @@ const TransporterManager = ({
       return;
     }
 
-    const canvas = canvasRef.current;
-    const signatureData = canvas.toDataURL('image/png');
+    try {
+      const canvas = canvasRef.current;
+      const signatureData = canvas.toDataURL('image/png');
 
-    const transporterData = {
-      id: Date.now().toString(),
-      name: newTransporter.name.trim(),
-      company: newTransporter.company.trim(),
-      signature: signatureData,
-      createdAt: new Date().toISOString()
-    };
+      const transporterData = {
+        name: newTransporter.name.trim(),
+        company: newTransporter.company.trim(),
+        signature: signatureData,
+        createdAt: new Date().toISOString()
+      };
 
-    // Salva in localStorage e aggiorna stato
-    const updatedTransporters = [...transporters, transporterData];
-    localStorage.setItem('transporters', JSON.stringify(updatedTransporters));
-    setTransporters(updatedTransporters);
-    
-    // Reset form
-    setNewTransporter({ name: '', company: '' });
-    setIsDrawingSignature(false);
-    setHasSignature(false);
-    
-    toast.success('Trasportatore registrato con successo');
+      console.log('💾 Salvando trasportatore su Firebase...', transporterData);
+      
+      // Salva su Firebase
+      const transporterId = await window.salvaTrasportatore(transporterData);
+      
+      console.log('✅ Trasportatore salvato su Firebase con ID:', transporterId);
+      
+      // Aggiorna stato locale
+      const savedTransporter = { ...transporterData, id: transporterId };
+      const updatedTransporters = [...transporters, savedTransporter];
+      setTransporters(updatedTransporters);
+      
+      // Salva anche in localStorage per fallback
+      localStorage.setItem('transporters', JSON.stringify(updatedTransporters));
+      
+      // Reset form
+      setNewTransporter({ name: '', company: '' });
+      setIsDrawingSignature(false);
+      setHasSignature(false);
+      
+      toast.success('Trasportatore registrato con successo');
+      
+    } catch (error) {
+      console.error('❌ Errore salvataggio trasportatore:', error);
+      toast.error('Errore durante il salvataggio: ' + error.message);
+    }
   };
 
   const deleteTransporter = (transporterId) => {
