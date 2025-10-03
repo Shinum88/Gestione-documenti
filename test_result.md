@@ -140,6 +140,18 @@ user_problem_statement: |
   18. VERIFICA: Tutti i dati (cartelle, documenti, firme) sono ancora presenti dopo ricaricamento
 
 frontend:
+  - task: "Integrazione Firebase Firestore per salvataggio documenti"
+    implemented: true
+    working: "NA"
+    file: "src/components/CameraScanner.js, src/components/OperatorDashboard.js, src/components/CargoManagerDashboard.js, src/components/TransporterManager.js, src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implementata integrazione completa Firebase. CameraScanner ora chiama window.salvaDocumento(), OperatorDashboard chiama window.salvaFolder(), CargoManagerDashboard chiama window.firmaDocumento() e window.leggiTrasportatori(), TransporterManager chiama window.salvaTrasportatore(), App.js carica dati da Firebase all'avvio. Necessita test completo del flusso operatore → salvataggio → firma con verifica console logs Firebase."
+
   - task: "Fix schermata nera documento singola pagina"
     implemented: true
     working: true
