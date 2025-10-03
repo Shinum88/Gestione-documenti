@@ -1,0 +1,198 @@
+================================================================================
+FIREBASE FIRESTORE SECURITY RULES - PERMETTI ACCESSO A TUTTI I BROWSER
+================================================================================
+
+PROBLEMA: Firefox (Mozilla) e altri browser vengono bloccati dalle regole di sicurezza Firebase.
+
+SOLUZIONE: Configura regole permissive su Firebase Console.
+
+================================================================================
+PASSO 1: Vai su Firebase Console
+================================================================================
+
+1. Apri: https://console.firebase.google.com/
+2. Seleziona progetto: "ddt-logistica"
+3. Menu laterale sinistro → clicca "Firestore Database"
+4. In alto, clicca sulla tab "Regole" (o "Rules")
+
+================================================================================
+PASSO 2: Sostituisci le Regole con Questo Codice
+================================================================================
+
+Copia e incolla ESATTAMENTE questo codice:
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // REGOLE PERMISSIVE - PERMETTONO ACCESSO DA TUTTI I BROWSER
+    // Usare solo per sviluppo/testing
+    
+    // Permetti lettura e scrittura su TUTTI i documenti
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+================================================================================
+PASSO 3: Pubblica le Regole
+================================================================================
+
+1. Clicca il pulsante "Pubblica" (o "Publish") in alto a destra
+2. Conferma la pubblicazione
+3. Dovresti vedere un messaggio: "Regole pubblicate con successo"
+
+================================================================================
+SPIEGAZIONE REGOLE
+================================================================================
+
+match /{document=**} {
+  allow read, write: if true;
+}
+
+Significato:
+- match /{document=**}  → Applica a TUTTI i documenti in TUTTE le collezioni
+- allow read            → Permetti lettura (GET, LIST)
+- allow write           → Permetti scrittura (CREATE, UPDATE, DELETE)
+- if true               → SEMPRE permesso (nessuna autenticazione richiesta)
+
+Questa configurazione permette:
+✅ Lettura da qualsiasi browser (Firefox, Chrome, Safari, Edge)
+✅ Scrittura da qualsiasi browser
+✅ Nessuna autenticazione richiesta
+✅ Accesso da localhost
+✅ Accesso da domini esterni
+
+================================================================================
+⚠️ IMPORTANTE PER PRODUZIONE
+================================================================================
+
+Queste regole sono PERMISSIVE e vanno bene per sviluppo/testing.
+
+Per PRODUZIONE, usa regole più sicure:
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Esempio: Richiedi autenticazione
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Oppure: Permetti solo da domini specifici
+    match /documents/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
+
+================================================================================
+VERIFICA CHE FUNZIONI
+================================================================================
+
+Dopo aver pubblicato le regole:
+
+1. Apri Firefox
+2. Vai su: http://localhost:3000
+3. Premi F12 (Console)
+4. Scrivi: window.leggiDocumenti()
+5. Premi Invio
+
+Dovresti vedere:
+✅ "Letti N documenti da Firebase"
+✅ Array di documenti (anche se vuoto)
+
+Se vedi errori:
+❌ "Missing or insufficient permissions" → Regole non ancora pubblicate
+❌ "Forbidden" → Aspetta 1-2 minuti per propagazione regole
+
+================================================================================
+TEST SALVATAGGIO
+================================================================================
+
+Nella console Firefox:
+
+window.salvaDocumento({
+  name: "Test da Firefox",
+  pages: [],
+  signed: false,
+  createdAt: new Date().toISOString()
+}).then(id => {
+  console.log("✅ Salvato con ID:", id);
+  alert("Funziona! ID: " + id);
+}).catch(err => {
+  console.error("❌ Errore:", err);
+  alert("Errore: " + err.message);
+});
+
+Se funziona, dovresti vedere:
+1. Log console: "✅ Documento salvato su Firebase con ID: xxxxx"
+2. Alert: "Funziona! ID: xxxxx"
+3. Su Firebase Console → Firestore → Collezione "documents" → Nuovo documento
+
+================================================================================
+PROBLEMI COMUNI FIREFOX
+================================================================================
+
+PROBLEMA 1: "Cross-Origin Request Blocked"
+SOLUZIONE: Le regole Firebase risolvono questo. Se persiste, disabilita 
+          Enhanced Tracking Protection per localhost:
+          Firefox → Impostazioni → Privacy → Protezione antitracciamento → 
+          Aggiungi eccezione per localhost
+
+PROBLEMA 2: "SecurityError: The operation is insecure"
+SOLUZIONE: Usa HTTPS o configura Firefox:
+          about:config → dom.security.https_only_mode → false (solo per test)
+
+PROBLEMA 3: Cache Firefox ostinata
+SOLUZIONE: 
+  1. Menu → Cronologia → Cancella cronologia recente
+  2. Seleziona: Cache, Cookie
+  3. Intervallo: Ultima ora
+  4. Cancella adesso
+  5. Ricarica con Ctrl+Shift+R
+
+================================================================================
+REGOLE CORS (Se Necessario)
+================================================================================
+
+Se hai ancora problemi CORS, aggiungi questo al file index.html PRIMA di 
+firebase scripts:
+
+<script>
+  // Configura CORS per Firestore
+  if (typeof firebase !== 'undefined') {
+    firebase.firestore().settings({
+      experimentalForceLongPolling: true,
+      useFetchStreams: false
+    });
+  }
+</script>
+
+================================================================================
+CONTATTI FIREBASE SUPPORT
+================================================================================
+
+Se dopo aver configurato le regole hai ancora problemi:
+
+1. Verifica stato Firebase: https://status.firebase.google.com/
+2. Controlla quota Firebase: Console → Usage → Firestore
+3. Log Firebase: Console → Firestore → scheda "Utilizzo"
+
+================================================================================
+RIEPILOGO VELOCE
+================================================================================
+
+✅ Cosa fare ORA:
+1. Vai su Firebase Console
+2. Firestore Database → Regole
+3. Incolla il codice delle regole permissive
+4. Pubblica
+5. Aspetta 30 secondi
+6. Ricarica pagina Firefox (Ctrl+Shift+R)
+7. Testa: window.leggiDocumenti()
+
+Fatto! 🎉
+
+================================================================================
