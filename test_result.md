@@ -242,6 +242,8 @@ test_plan:
 
 agent_communication:
   - agent: "main"
+    message: "Integrazione Firebase Firestore completata. Tutti i componenti ora chiamano le funzioni globali Firebase (window.salvaDocumento, window.salvaFolder, window.firmaDocumento, window.salvaTrasportatore). App.js carica dati all'avvio. Console logs confermano Firebase inizializzato correttamente. Necessita test completo del flusso end-to-end: creazione cartella → salvataggio documento → firma → verifica persistenza dopo ricaricamento pagina."
+  - agent: "main"
     message: "Fix implementato per schermata nera con documenti singola pagina. concludeAndShowPreview() modificato per accettare immagine finale, pulsante 'Concludi e Invia' ora passa immagine direttamente a onFinish(). Necessita test critico immediato del flusso completo."
   - agent: "testing"
     message: |
